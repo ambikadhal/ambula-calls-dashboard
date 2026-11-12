@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hindi Calls Dashboard</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#16202e;--mut:#64708a;--line:#e3e8f0;--blue:#2f6fed;--org:#f08a24;--teal:#12a594;--grn:#16a34a;--red:#e5484d;--amb:#e0a100;--hero1:#1d3a8a;--hero2:#2f6fed;--shade:rgba(240,138,36,.10);--soft:#eef3ff}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1420;--card:#172033;--ink:#e8edf6;--mut:#92a0ba;--line:#26334c;--blue:#6b9bff;--org:#ffa24d;--teal:#3fd0bd;--grn:#4ade80;--red:#ff7a7f;--amb:#f5c542;--hero1:#16296b;--hero2:#2a58c9;--shade:rgba(255,162,77,.12);--soft:#1d2a45}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(120deg,var(--hero1),var(--hero2));color:#fff;padding:16px 16px 14px}
+header h1{margin:0;font-size:20px;letter-spacing:.2px}header p{margin:3px 0 0;font-size:13px;opacity:.88}
+.pill{display:inline-block;background:rgba(255,255,255,.18);border-radius:20px;padding:2px 10px;font-size:12px;margin-right:6px}
+nav{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--line);display:flex;gap:6px;padding:8px 12px;overflow-x:auto;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:22px;padding:8px 15px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;transition:.15s}
+nav button:hover{border-color:var(--blue)}nav button.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+main{max-width:1120px;margin:0 auto;padding:14px 14px 40px}
+.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(20,30,60,.04)}
+.card h2{margin:0 0 2px;font-size:16px}.sub{color:var(--mut);font-size:13px;margin:0 0 10px}
+.hero{display:flex;gap:16px;align-items:center;background:linear-gradient(120deg,var(--hero1),var(--hero2));color:#fff;border:0;flex-wrap:wrap}
+.hero .big{font-size:44px;font-weight:800;line-height:1.05}.hero small{opacity:.85;font-size:13px}.hero .txt{flex:1;min-width:210px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 12px}.tile b{display:block;font-size:22px;line-height:1.2}.tile span{color:var(--mut);font-size:12.5px}
+.tile.acc{border-left:4px solid var(--blue)}
+.bar{height:12px;background:var(--line);border-radius:8px;overflow:hidden;position:relative}.bar i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--blue),var(--teal));transition:width .6s}
+.bar u{position:absolute;top:-2px;bottom:-2px;width:3px;background:var(--org);border-radius:2px}
+.chip{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600}
+.ok{background:rgba(22,163,74,.15);color:var(--grn)}.warn{background:rgba(224,161,0,.18);color:var(--amb)}.bad{background:rgba(229,72,77,.15);color:var(--red)}.info{background:var(--soft);color:var(--blue)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}th,td{padding:8px 7px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child,.l{text-align:left}
+th{font-size:12px;color:var(--mut);font-weight:600}th.s{cursor:pointer}th.s:hover{color:var(--blue)}tr.sun td{background:var(--shade)}tr.today td{background:var(--soft);font-weight:700}tr.mile td{box-shadow:inset 0 -2px 0 var(--org)}
+tr.row{cursor:pointer}tr.row:hover td{background:var(--soft)}.tw{overflow-x:auto}
+.chart{position:relative;margin-top:6px}.chart svg{width:100%;height:auto;display:block;touch-action:pan-y}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);padding:7px 10px;border-radius:9px;font-size:12.5px;display:none;z-index:5;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.leg{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.leg button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:3px 10px;font-size:12.5px;cursor:pointer}.leg button.off{opacity:.4}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+input,select{font:inherit;font-size:14px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink)}
+.flt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}.seg button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.seg button:first-child{border-radius:9px 0 0 9px}.seg button:last-child{border-radius:0 9px 9px 0}.seg button.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.heat{display:grid;grid-template-columns:54px repeat(24,1fr);gap:2px;font-size:10px}.heat div{height:19px;border-radius:3px}.heat .h{height:auto;text-align:center;color:var(--mut)}.heat .r{height:19px;line-height:19px;color:var(--mut);font-size:11px}
+.acts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.act{display:flex;gap:10px;background:var(--soft);border-radius:12px;padding:11px}.act .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;text-align:center;line-height:28px;font-weight:700;font-size:14px}
+.act b{display:block}.act span{font-size:13.5px;color:var(--ink)}
+.help{font-size:13px;color:var(--mut);background:var(--soft);border-radius:10px;padding:8px 11px;margin:8px 0}
+details{margin-top:12px}summary{cursor:pointer;color:var(--blue);font-weight:600}
+.tcard{cursor:pointer;transition:.15s;border-left:5px solid var(--c)}.tcard:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(20,30,60,.12)}
+footer{color:var(--mut);font-size:12px;text-align:center;padding:16px}
+.ring{flex:0 0 96px}.ring text{fill:#fff}
+</style></head><body>
+<header><h1>Hindi call target tracker</h1><p id="hsub"></p></header>
+<nav id="nav"></nav><main id="main"></main>
+<footer>Team = referral-code prefix (CR/JSSK/SB = Craftzens · WB = ParisevaOne · OD = mDigital-OD). Hindi = Hindi + Bhojpuri + Haryanvi. Updated every morning with the previous day's calls.</footer>
+<script>
+const D=/*DATA*/null;
+const TK=['CR','WB','OD'],COL={CR:'#2f6fed',WB:'#f08a24',OD:'#12a594'};
+const N=D.days.length,LAST=D.LAST,REM=D.REM,first=LAST+1,MD=D.mileDay,MILE=D.milestone,PEAK=D.peakDay;
+const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const dn=n=>WD[new Date(2026,10,n).getDay()]+' '+n+' Nov', isSun=n=>new Date(2026,10,n).getDay()==0;
+const f=x=>Math.round(x).toLocaleString('en-IN'), pc=x=>Math.round(x*100)+'%', avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:0;
+const lk=v=>v>=100000?(+(v/100000).toFixed(1))+'L':v>=1000?(+(v/1000).toFixed(1))+'k':Math.round(v);
+const MONTH=Array.from({length:30},(_,i)=>i+1);
+const pad=(a,at)=>MONTH.map((_,i)=>{const j=i-at;return j>=0&&j<a.length?a[j]:null});
+/* ---------- interactive chart ---------- */
+function mkChart(host,o){
+ const hidden=new Set(),W=640,H=o.h||230,m={l:42,r:12,t:12,b:26},iw=W-m.l-m.r,ih=H-m.t-m.b,n=o.x.length,bw=iw/n;
+ host.classList.add('chart');host.innerHTML='<div class="svgbox"></div><div class="leg"></div><div class="tip"></div>';
+ const box=host.querySelector('.svgbox'),leg=host.querySelector('.leg'),tip=host.querySelector('.tip');
+ const series=[...(o.bars||[]).map(s=>({...s,t:'b'})),...(o.lines||[]).map(s=>({...s,t:'l'}))];
+ function draw(){
+  const vis=series.filter(s=>!hidden.has(s.n));
+  let mx=Math.max(...vis.flatMap(s=>s.v).filter(v=>v!=null),...(o.hlines||[]).map(h=>h.v),1)*1.07;
+  const raw=mx/4,pw=Math.pow(10,Math.floor(Math.log10(raw))),st=[1,2,2.5,5,10].map(k=>k*pw).find(k=>k>=raw);mx=st*4;
+  const X=i=>m.l+(i+.5)*bw,Y=v=>m.t+ih-v/mx*ih;let s=`<svg viewBox="0 0 ${W} ${H}">`;
+  for(let k=0;k<=4;k++){const y=Y(st*k);s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${m.l-6}" y="${y+4}" font-size="11" text-anchor="end" fill="var(--mut)">${lk(st*k)}</text>`}
+  (o.shade||[]).forEach(i=>s+=`<rect x="${m.l+i*bw}" y="${m.t}" width="${bw}" height="${ih}" fill="var(--shade)"/>`);
+  o.x.forEach((t,i)=>{if(n<=14||i%2==0||i==n-1)s+=`<text x="${X(i)}" y="${H-8}" font-size="11" text-anchor="middle" fill="var(--mut)">${t}</text>`});
+  vis.filter(q=>q.t=='b').forEach(q=>q.v.forEach((v,i)=>{if(v==null)return;const h=v/mx*ih;s+=`<rect x="${m.l+i*bw+1.5}" y="${m.t+ih-h}" width="${Math.max(bw-3,1)}" height="${h}" rx="3" fill="${q.c}" opacity="${q.o||1}"/>`}));
+  vis.filter(q=>q.t=='l').forEach(q=>{let d='',pen=false;q.v.forEach((v,i)=>{if(v==null){pen=false;return}d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);pen=true});
+   s+=`<path d="${d}" fill="none" stroke="${q.c}" stroke-width="${q.w||2.4}" ${q.dash?'stroke-dasharray="6 5"':''} stroke-linejoin="round" stroke-linecap="round"/>`;
+   if(q.dots)q.v.forEach((v,i)=>{if(v!=null)s+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="${q.c}"/>`})});
+  (o.hlines||[]).forEach(h=>{const y=Y(h.v);s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="${h.c||'var(--org)'}" stroke-dasharray="4 4" stroke-width="1.5"/><text x="${W-m.r-2}" y="${y-4}" font-size="11" text-anchor="end" fill="${h.c||'var(--org)'}" font-weight="600">${h.label}</text>`});
+  (o.vlines||[]).forEach(v=>{const x=X(v.i);s+=`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${m.t+ih}" stroke="${v.c||'var(--mut)'}" stroke-dasharray="3 4"/><text x="${x+3}" y="${m.t+11}" font-size="10.5" fill="${v.c||'var(--mut)'}">${v.label}</text>`});
+  s+=`<rect class="hv" x="0" y="${m.t}" width="${bw}" height="${ih}" fill="var(--blue)" opacity="0"/></svg>`;box.innerHTML=s;
+  const svg=box.querySelector('svg'),hv=svg.querySelector('.hv');
+  const move=e=>{const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width;let i=Math.floor((px-m.l)/bw);if(i<0||i>=n){tip.style.display='none';hv.setAttribute('opacity',0);return}
+   hv.setAttribute('x',m.l+i*bw);hv.setAttribute('opacity',.08);
+   const rows=vis.filter(q=>q.v[i]!=null).map(q=>`<div><span style="color:${q.c}">●</span> ${q.n}: <b>${(o.fmt||f)(q.v[i])}</b></div>`).join('');
+   tip.innerHTML=`<b>${o.tl?o.tl(i):o.x[i]}</b>${rows}`;tip.style.display='block';
+   const hr=host.getBoundingClientRect();let lx=e.clientX-hr.left+14;if(lx+tip.offsetWidth>hr.width)lx=e.clientX-hr.left-tip.offsetWidth-14;tip.style.left=Math.max(lx,0)+'px';tip.style.top=Math.max(e.clientY-hr.top-40,0)+'px'};
+  svg.addEventListener('pointermove',move);svg.addEventListener('pointerdown',move);svg.addEventListener('pointerleave',()=>{tip.style.display='none';hv.setAttribute('opacity',0)});
+ }
+ leg.innerHTML=series.map(q=>`<button data-n="${q.n}"><i style="background:${q.c};${q.dash?'opacity:.6':''}"></i>${q.n}</button>`).join('');
+ leg.querySelectorAll('button').forEach(b=>b.onclick=()=>{const k=b.dataset.n;hidden.has(k)?hidden.delete(k):hidden.add(k);b.classList.toggle('off');draw()});
+ draw();
+}
+const mount=(id,o)=>setTimeout(()=>{const e=document.getElementById(id);if(e)mkChart(e,o)},0);
+const tlab=i=>dn(i+1);
+/* ---------- helpers ---------- */
+const ring=(p,c)=>{const r=40,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="${r}" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="10"/><circle cx="50" cy="50" r="${r}" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*Math.min(p,1)} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="56" text-anchor="middle" font-size="20" font-weight="800">${pc(p)}</text></svg>`};
+const bar=(p,mk)=>`<div class="bar"><i style="width:${Math.min(Math.max(p,0),1)*100}%"></i>${mk!=null?`<u style="left:${mk*100}%"></u>`:''}</div>`;
+function mileInfo(r,who){const m=r.mile,done=r.hindi;let t='';
+ if(LAST>=MD){const at=r.cumact[MD-1];t=at>=m.target?`<span class="chip ok">Milestone met on ${MD} Nov</span>`:`<span class="chip bad">${MD} Nov milestone missed by ${f(m.target-at)}</span>`}
+ else{const per=m.need15,ratio=per/r.b7;t=`To hit it by ${MD} Nov EOD: <b>${f(per)}</b> calls/day (${ratio.toFixed(1)}× current pace). `+(m.cross?`The smooth plan crosses it on <b>${m.cross} Nov</b>.`:'')+(m.pace_cross?` At today's pace: ${m.pace_cross} Nov.`:' At today\'s pace: not by 30 Nov.')}
+ return `<div class="card"><h2>🎯 Milestone: ${f(m.target)} by ${MD} Nov EOD ${who?'· '+who:''}</h2><p class="sub">${f(done)} done · ${f(Math.max(m.gap,0))} to go · ${pc(done/m.target)}</p>${bar(done/m.target)}<p style="margin:8px 0 0;font-size:13.5px">${t}</p></div>`}
+function planCharts(id,r,title){
+ const hd=r.hd,a=pad(hd,0),g=pad(r.goal,LAST);
+ const cumA=pad(r.cumact,0),conn=(arr)=>{const v=pad(arr,LAST);v[LAST-1]=r.cumact[LAST-1];return v};
+ const sun=MONTH.filter(n=>isSun(n)).map(n=>n-1);
+ return `<div class="card"><h2>${title||'Daily Hindi calls'}: done vs goal</h2><p class="sub">Dark bars = calls done. Light bars = daily goal for the days ahead. Orange columns are Sundays. Hover or tap for numbers.</p><div id="${id}-d"></div></div>
+ <div class="card"><h2>Running total vs target</h2><p class="sub">Solid line = calls so far. Dashed = the plan. Tap a legend name to hide a line.</p><div id="${id}-c"></div></div>`
+}
+function planMount(id,r,col){
+ const a=pad(r.hd,0),g=pad(r.goal,LAST),sun=MONTH.filter(n=>isSun(n)).map(n=>n-1);
+ mount(id+'-d',{x:MONTH,tl:tlab,shade:sun,h:230,bars:[{n:'Calls done',c:col,v:a},{n:'Daily goal',c:col,o:.4,v:g}],vlines:[{i:PEAK-1,label:'peak reached',c:'var(--grn)'}]});
+ const conn=arr=>{const v=pad(arr,LAST);v[LAST-1]=r.cumact[LAST-1];return v};
+ mount(id+'-c',{x:MONTH,tl:tlab,h:250,lines:[{n:'Done so far',c:col,v:pad(r.cumact,0),w:3},{n:'Plan',c:'#16a34a',dash:1,v:conn(r.cum),w:2.6},{n:'If pace stays flat',c:'#8a94a8',dash:1,w:1.8,v:conn(r.flatpath)},{n:'If trend continues',c:'#b07cf0',dash:1,w:1.8,v:conn(r.trendpath)}],
+  hlines:[{v:r.target,label:'Target '+lk(r.target)},{v:r.mile.target,label:'Milestone '+lk(r.mile.target)+' by '+MD+' Nov',c:'#e5484d'}],vlines:[{i:MD-1,label:MD+' Nov',c:'#e5484d'}]});
+}
+function dayTable(r){return `<div class="tw"><table><tr><th>Day</th><th>Goal</th><th>Total by evening</th><th></th></tr>${r.goal.map((g,i)=>{const n=first+i,cl=[isSun(n)?'sun':'',i==0?'today':'',n==MD?'mile':''].join(' ');
+ return `<tr class="${cl}"><td>${dn(n)}${i==0?' · today':''}</td><td>${f(g)}</td><td>${f(r.cum[i])}</td><td class="l" style="font-size:12px;color:var(--mut)">${isSun(n)?'Sunday: expect a dip, push harder':''}${n==MD?'🎯 milestone day':''}${n==PEAK?' peak pace reached':''}</td></tr>`}).join('')}</table></div>`}
+function ckptTable(r){const rows=Object.entries(r.ckpt),all=[15,20,25,30].map(n=>{const planV=n>=first?r.ckpt[n]:null;return n});
+ // checkpoints: use plan for upcoming; for past days show actual
+ const body=[15,20,25,30].map(n=>{if(n<=LAST){const v=r.cumact[n-1];return `<tr><td>${n} Nov</td><td>${f(v)}</td><td>–</td><td><span class="chip info">done</span></td></tr>`}
+  const p=r.ckpt[n],need=(p-r.hindi)/(n-LAST);return `<tr><td>${n} Nov</td><td>${f(p)}</td><td>${f(need)}/day</td><td><span class="chip warn">ahead</span></td></tr>`}).join('');
+ return `<div class="tw"><table><tr><th>By end of</th><th>Total needed</th><th>Pace from now</th><th></th></tr>${body}</table></div>`}
+/* ---------- code table ---------- */
+function codeTable(host,rows,o){
+ const st={q:'',tf:'ALL',sf:'ALL',k:'hindi',d:-1,open:null};
+ host.innerHTML=`<div class="flt">${o.search?'<input class="q" type="search" placeholder="Search a code, e.g. CRNI">':''}${o.teams?'<select class="tf"><option value="ALL">All teams</option>'+TK.map(t=>`<option value="${t}">${D.teams[t].name}</option>`).join('')+'</select>':''}<div class="seg">${['ALL','On goal','Close','Behind'].map(s=>`<button data-s="${s}" class="${s=='ALL'?'on':''}">${s=='ALL'?'All':s}</button>`).join('')}</div></div><div class="tw"><table></table></div><p class="help">Goal today = the code's last-7-day average × the team's speed-up for today (${'' }so all codes together add up to the team goal). <b>On goal</b> = last 3 days average at or above goal · <b>Close</b> = at least 60% · <b>Behind</b> = below 60%. Tap a row for its daily chart.</p>`;
+ const tb=host.querySelector('table');
+ const draw=()=>{let rs=rows.filter(r=>(!st.q||r.code.includes(st.q))&&(st.tf=='ALL'||r.team==st.tf)&&(st.sf=='ALL'||r.status==st.sf));
+  rs.sort((a,b)=>(a[st.k]>b[st.k]?1:a[st.k]<b[st.k]?-1:0)*st.d);const cols=[['code','Code'],['team','Team'],['hindi','Hindi total'],['y','Yesterday'],['b3','3-day avg'],['goal','Goal today'],['pk','Goal at peak'],['status','Status']];
+  tb.innerHTML=`<tr>${cols.filter(c=>o.teams||c[0]!='team').map(c=>`<th class="s" data-k="${c[0]}">${c[1]}${st.k==c[0]?(st.d<0?' ▼':' ▲'):''}</th>`).join('')}<th>Progress</th></tr>`+rs.slice(0,300).map(r=>{const p=r.goal?r.b3/r.goal:0,cls=r.status=='On goal'?'ok':r.status=='Close'?'warn':'bad';
+   return `<tr class="row" data-c="${r.code}"><td><b>${r.code}</b></td>${o.teams?`<td class="l">${D.teams[r.team].name.replace('mDigital-','')}</td>`:''}<td>${f(r.hindi)}</td><td>${r.y}</td><td>${f(r.b3)}</td><td><b>${f(r.goal)}</b></td><td>${f(r.pk)}</td><td><span class="chip ${cls}">${r.status}</span></td><td style="min-width:90px">${bar(p)}</td></tr>`+(st.open==r.code?`<tr><td colspan="10" style="padding:10px 4px"><div id="cd"></div></td></tr>`:'')}).join('')+(rs.length>300?`<tr><td colspan="10" class="l">Showing first 300 of ${rs.length}. Use search.</td></tr>`:'');
+  tb.querySelectorAll('th.s').forEach(th=>th.onclick=()=>{const k=th.dataset.k;st.d=st.k==k?-st.d:(k=='code'||k=='team'?1:-1);st.k=k;draw()});
+  tb.querySelectorAll('tr.row').forEach(tr=>tr.onclick=()=>{st.open=st.open==tr.dataset.c?null:tr.dataset.c;draw()});
+  if(st.open){const r=rows.find(x=>x.code==st.open);mkChart(tb.querySelector('#cd'),{x:D.dnum,tl:i=>D.days[i],h:150,bars:[{n:r.code+' Hindi calls',c:COL[r.team],v:r.daily}],hlines:[{v:r.goal,label:'goal today '+f(r.goal)}]})}};
+ const q=host.querySelector('.q');if(q)q.oninput=e=>{st.q=e.target.value.toUpperCase().trim();draw()};const tf=host.querySelector('.tf');if(tf)tf.onchange=e=>{st.tf=e.target.value;draw()};
+ host.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{st.sf=b.dataset.s;host.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x==b));draw()});draw();
+}
+function mkRows(src,T){const r=D.teams[T],ratio=r.goal[0]/r.b7,pr=r.peak/r.b7;
+ return src.map(x=>{const b7=avg(x.daily.slice(-7)),b3=avg(x.daily.slice(-3)),g=b7*ratio;return {code:x.code,team:T,hindi:x.hindi,daily:x.daily,y:x.daily[x.daily.length-1],b3,goal:g,pk:b7*pr,status:g==0?'Behind':b3>=g?'On goal':b3>=.6*g?'Close':'Behind'}})}
+/* ---------- pages ---------- */
+function overview(){const c=D.co,pcnt=c.hindi/c.target,rise=(c.peak-c.s0)/Math.max(PEAK-first,1);
+ let h=`<div class="card hero">${ring(pcnt)}<div class="txt"><small>Company goal today · ${dn(first)}</small><div class="big">${f(c.goal[0])}</div><small>Hindi calls · yesterday we did <b>${f(c.yest)}</b>. Goal rises about ${f(rise)} a day until ${PEAK} Nov (to ~${f(c.peak)}), then stays almost flat.</small></div></div>
+ <div class="grid g4" style="margin-top:12px"><div class="tile acc"><b>${f(c.hindi)}</b><span>Hindi calls done of ${f(c.target)}</span></div><div class="tile"><b>${f(c.remaining)}</b><span>still to do in ${REM} days</span></div><div class="tile"><b>${f(c.b7)}</b><span>last-7-day average per day</span></div><div class="tile"><b>${f(c.peak/c.b7*10)/10}×</b><span>speed-up needed by ${PEAK} Nov</span></div></div>
+ <div style="margin-top:12px">${mileInfo(c,'Company')}</div>
+ <h2 style="margin:18px 2px 8px;font-size:17px">Teams <span style="font-weight:400;font-size:13px;color:var(--mut)">· tap a card to open</span></h2><div class="grid g3">`;
+ TK.forEach(t=>{const r=D.teams[t];h+=`<div class="card tcard" style="--c:${COL[t]}" onclick="go('${t}')"><b style="font-size:16px">${r.name}</b><div style="margin:8px 0 6px">${bar(r.hindi/r.target,r.mile.target/r.target)}</div><div style="font-size:13.5px">${f(r.hindi)} / ${f(r.target)} (${pc(r.hindi/r.target)}) · <span style="color:var(--org)">▮</span> milestone ${lk(r.mile.target)}</div><div class="grid" style="grid-template-columns:1fr 1fr;margin-top:10px"><div><span class="sub" style="margin:0">Goal today</span><br><b style="font-size:20px">${f(r.goal[0])}</b></div><div><span class="sub" style="margin:0">Yesterday</span><br><b style="font-size:20px">${f(r.yest)}</b></div></div></div>`});
+ h+=`</div><div class="grid g2" style="margin-top:12px"><div class="card"><h2>Daily Hindi calls by team</h2><p class="sub">Hover or tap for numbers. Tap a team name to hide it.</p><div id="o-t"></div></div><div class="card"><h2>Company running total</h2><p class="sub">Orange line = ${f(MILE)} milestone by ${MD} Nov. Top line = 2,40,000 target.</p><div id="o-c"></div></div></div>
+ <div class="card" style="margin-top:12px"><h2>Regional languages</h2><p class="sub">Company-wide count against each language's target (Telugu 3,000 · others 1,500). Odia (${f(c.odia)}) already achieved; English (${f(c.eng)}) not counted.</p><div class="grid g4">`;
+ Object.entries(c.reg).forEach(([l,v])=>{const tg=l=='Telugu'?3000:1500,left=Math.max(tg-v,0);h+=`<div class="tile"><b>${l}</b><div style="margin:6px 0">${bar(v/tg)}</div><span>${f(v)} / ${f(tg)} · needs <b>${f(left/REM)}</b>/day</span></div>`});
+ h+=`</div></div><details class="card"><summary>How the daily goal is worked out</summary><p class="help">Goal starts above yesterday's level (the last few days were low because of Diwali, so today's goal is set higher to get back on track), rises evenly each day until ${PEAK} Nov, then stays almost flat (+0.4% a day) so the target is still reached on 30 Nov. If a day or checkpoint is missed, tomorrow's numbers go up automatically. ${f(c.unassigned)} Hindi calls have referral codes that match no team; they count only in company totals. Team targets add up to more than the company target by design.</p></details>`;
+ return h}
+function mount_overview(){const c=D.co;
+ mount('o-t',{x:MONTH.slice(0,N),tl:tlab,h:240,lines:TK.map(t=>({n:D.teams[t].name,c:COL[t],v:D.teams[t].hd,dots:1}))});
+ const conn=arr=>{const v=pad(arr,LAST);v[LAST-1]=c.cumact[LAST-1];return v};
+ mount('o-c',{x:MONTH,tl:tlab,h:240,lines:[{n:'Done so far',c:'#2f6fed',w:3,v:pad(c.cumact,0)},{n:'Plan',c:'#16a34a',dash:1,v:conn(c.cum)},{n:'If pace stays flat',c:'#8a94a8',dash:1,w:1.8,v:conn(c.flatpath)},{n:'If trend continues',c:'#b07cf0',dash:1,w:1.8,v:conn(c.trendpath)}],hlines:[{v:c.target,label:'Target 2.4L',c:'#16a34a'},{v:MILE,label:'1L by '+MD+' Nov'}],vlines:[{i:MD-1,label:MD+' Nov',c:'#e5484d'}]})}
+function team(T){const r=D.teams[T],pcnt=r.hindi/r.target,col=COL[T],rise=(r.peak-r.s0)/Math.max(PEAK-first,1),ha=r.hourAvg;
+ const eve=avg(ha.slice(15,23)),morn=avg(ha.slice(7,11)),late=ha[23];
+ const act=[['Set today\'s goal',`${r.name} needs <b>${f(r.goal[0])}</b> Hindi calls today (yesterday ${f(r.yest)}). Goal rises ~${f(rise)}/day until ${PEAK} Nov, to ~${f(r.peak)}/day.`],
+ ['Hit the milestone',LAST<MD?`${f(r.mile.target)} by ${MD} Nov EOD needs ${f(r.mile.need15)}/day. Plan crosses it on ${r.mile.cross||'after 30'} Nov; every extra call before ${MD} Nov brings it closer.`:`Milestone ${MD} Nov: ${r.cumact[MD-1]>=r.mile.target?'met':'missed'}.`],
+ ['Fix Sundays',`Sundays (${MONTH.filter(n=>n>LAST&&isSun(n)).join(', ')} Nov) usually dip. Plan extra callers on those days.`],
+ ['Use the mornings',`7–10 am averages only ${f(morn)}/hour vs ${f(eve)}/hour in the 3–10 pm window (${pc(morn/Math.max(eve,1))}). Start calling earlier.`],
+ ['Wake up quiet codes',r.dormant.length?`${r.dormant.slice(0,4).map(x=>x.code).join(', ')} made no Hindi calls in the last 3 days. Call their referrers today.`:'No code has gone quiet. Keep it that way.'],
+ ['Stop the slide',r.fall.length?`Falling codes: ${r.fall.slice(0,4).map(x=>x.code+' ('+f(x.a)+'→'+f(x.b)+'/day)').join(', ')}. Find out what changed.`:'No big code is falling.'],
+ ['Add calling numbers',`About ${f(r.b7mob)} numbers call daily (~${r.cpm.toFixed(1)} Hindi calls each). At that rate the ${PEAK} Nov goal needs about ${f(r.need_mob)} numbers a day. Recruit more and raise calls per number.`],
+ ['Protect the top codes',`Top 5 codes give ${pc(r.top5share)} of Hindi calls. Check them first every morning.`]];
+ let h=`<div class="card hero">${ring(pcnt)}<div class="txt"><small>${r.name} · goal today · ${dn(first)}</small><div class="big">${f(r.goal[0])}</div><small>Hindi calls · yesterday ${f(r.yest)} · rises ~${f(rise)}/day to ~${f(r.peak)} by ${PEAK} Nov, then almost flat.</small></div></div>
+ <div class="grid g4" style="margin-top:12px"><div class="tile acc"><b>${f(r.hindi)}</b><span>done of ${f(r.target)} (${pc(pcnt)})</span></div><div class="tile"><b>${f(r.remaining)}</b><span>still to do</span></div><div class="tile"><b>${f(r.b7)}</b><span>last-7-day average</span></div><div class="tile"><b>${f(r.flat)}</b><span>finish if pace stays flat (${pc(r.flat/r.target)})</span></div><div class="tile"><b>${f(r.trend)}</b><span>finish if trend continues (${pc(r.trend/r.target)})</span></div></div>
+ <div style="margin-top:12px">${mileInfo(r)}</div><div class="grid g2" style="margin-top:12px">${planCharts('t',r)}</div>
+ <div class="grid g2" style="margin-top:12px"><div class="card"><h2>Checkpoints</h2><p class="sub">Total Hindi calls needed by the end of each day.</p>${ckptTable(r)}</div><div class="card"><h2>Day-by-day goal</h2><p class="sub">Orange rows are Sundays.</p>${dayTable(r)}</div></div>
+ <div class="card" style="margin-top:12px"><h2>Referral codes: top ${r.topn}</h2><p class="sub">${r.ncodes} active codes. Compare each code with its goal for today.</p><div id="ct"></div></div>`;
+ if(r.dormant.length)h+=`<div class="card" style="margin-top:12px"><h2>😴 Quiet codes</h2><p class="sub">Were active earlier but no Hindi calls in the last 3 days.</p><div class="tw"><table><tr><th>Code</th><th>Calls before</th><th>Last Hindi call</th></tr>${r.dormant.map(x=>`<tr><td><b>${x.code}</b></td><td>${f(x.calls)}</td><td>${x.last}</td></tr>`).join('')}</table></div></div>`;
+ if(r.rise.length||r.fall.length)h+=`<div class="grid g2" style="margin-top:12px"><div class="card"><h2>📈 Rising codes</h2><p class="sub">Calls per day: first 5 days → last 5 days</p>${r.rise.map(x=>`<div style="padding:5px 0;border-bottom:1px solid var(--line)"><b>${x.code}</b> <span class="chip ok">${f(x.a)} → ${f(x.b)}</span></div>`).join('')||'None'}</div><div class="card"><h2>📉 Falling codes</h2><p class="sub">Calls per day: first 5 days → last 5 days</p>${r.fall.map(x=>`<div style="padding:5px 0;border-bottom:1px solid var(--line)"><b>${x.code}</b> <span class="chip bad">${f(x.a)} → ${f(x.b)}</span></div>`).join('')||'None'}</div></div>`;
+ h+=`<div class="card" style="margin-top:12px"><h2>Language targets</h2><div class="grid g4" style="margin-top:8px">${r.langs.map(x=>`<div class="tile"><b>${x.lang}</b><div style="margin:6px 0">${bar(x.done/x.target)}</div><span>${f(x.done)} / ${f(x.target)} · needs <b>${f(x.perday)}</b>/day</span></div>`).join('')}</div></div>
+ <div class="grid g2" style="margin-top:12px"><div class="card"><h2>⏰ When calls happen</h2><p class="sub">Average Hindi calls in each hour of the day.</p><div id="th"></div></div><div class="card"><h2>Day × hour map</h2><p class="sub">Darker = more calls. Hover for numbers.</p><div class="heat" id="hm"></div></div></div>
+ <div class="card" style="margin-top:12px"><h2>✅ What to do today</h2><div class="acts" style="margin-top:8px">${act.map((a,i)=>`<div class="act"><div class="n">${i+1}</div><div><b>${a[0]}</b><span>${a[1]}</span></div></div>`).join('')}</div></div>`;
+ return h}
+function mount_team(T){const r=D.teams[T],col=COL[T];planMount('t',r,col);
+ codeTable(document.getElementById('ct'),mkRows(r.top,T),{});
+ mount('th',{x:Array.from({length:24},(_,i)=>i),tl:i=>i+':00–'+(i+1)+':00',h:200,bars:[{n:'Avg Hindi calls',c:col,v:r.hourAvg}],fmt:v=>f(v)});
+ const mx=Math.max(...r.heat.flat(),1);let s='<div></div>'+Array.from({length:24},(_,i)=>`<div class="h">${i%3==0?i:''}</div>`).join('');
+ r.heat.forEach((row,d)=>{s+=`<div class="r">${D.days[d].split(' ').slice(0,2).join(' ')}</div>`+row.map((v,h)=>`<div title="${D.days[d]} ${h}:00 → ${v} calls" style="background:${col};opacity:${.07+.93*v/mx}"></div>`).join('')});document.getElementById('hm').innerHTML=s}
+function codesPage(){return `<div class="card"><h2>All referral codes (${D.codes.length})</h2><p class="sub">Every code with Hindi calls, all three teams. Search, filter, sort, and tap a row.</p><div id="ca"></div></div>`}
+function mount_codes(){const rows=D.codes.flatMap(c=>mkRows([{code:c[0],hindi:c[2],daily:c[4]}],c[1]));codeTable(document.getElementById('ca'),rows,{search:1,teams:1})}
+/* ---------- router ---------- */
+const TABS=[['ov','Overview'],['CR','Craftzens'],['WB','ParisevaOne'],['OD','mDigital-OD'],['codes','All codes']];
+function go(k){location.hash=k;}
+function render(){let k=location.hash.slice(1);if(!TABS.some(t=>t[0]==k))k='ov';
+ document.getElementById('nav').innerHTML=TABS.map(t=>`<button class="${t[0]==k?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('');
+ const m=document.getElementById('main');m.innerHTML=k=='ov'?overview():k=='codes'?codesPage():team(k);
+ if(k=='ov')mount_overview();else if(k=='codes')mount_codes();else mount_team(k);scrollTo(0,0)}
+document.getElementById('hsub').innerHTML=`<span class="pill">Data up to ${D.days[N-1]}</span><span class="pill">${REM} days left</span><span class="pill">Target by 30 Nov</span>`;
+addEventListener('hashchange',render);render();
+</script></body></html>
