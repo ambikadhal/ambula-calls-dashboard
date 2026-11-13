@@ -9,6 +9,7 @@ SCOPE={'CR':['Telugu','Kannada','Marathi','Tamil','Punjabi','Gujarati','Malayala
 TELSPLIT={'CR':2350,'OD':650}
 REG=['Telugu','Bangla','Kannada','Marathi','Tamil','Punjabi','Gujarati','Malayalam']
 HIN=['Hindi','Bhojpuri','Haryanvi']
+STRICT=True    # hit MILE by MILE_DAY EOD strictly
 CR_START=6000   # Craftzens goal for the first plan day is never below this; every other team/company is raised by the same factor
 
 files=sorted(glob.glob('data/*.xlsx'))
@@ -26,10 +27,18 @@ days=pd.date_range(d.date.min(),d.date.max()); ND=len(days); LAST=days[-1].day; 
 lab=[x.strftime('%a %-d %b') for x in days]
 print(len(d),'calls',lab[0],'to',lab[-1],'REM',REM)
 
-def plan(s0,rem):
-    """daily goals first..30: start at s0 (yesterday level), rise linearly to peak on PEAK_DAY, then almost flat (+E/day)."""
+def plan(s0,rem,gap=0):
+    """daily goals first..30.
+    Strict mode (before MILE_DAY, milestone not yet met): days first..MILE_DAY are sized so the milestone is hit exactly on MILE_DAY EOD
+    (gently rising), then the rest is spread almost flat (+E/day). Otherwise: rise linearly from s0 to a peak on PEAK_DAY, then almost flat."""
     ds=list(range(first,31))
     if rem<=0: return [0]*len(ds),0
+    if STRICT and gap>0 and first<=MILE_DAY:
+        k=MILE_DAY-first+1; w=[1+0.1*i for i in range(k)]; base=gap/sum(w); g=[base*x for x in w]
+        n=30-MILE_DAY
+        if n>0:
+            wp=[1+E*i for i in range(n)]; b=(rem-gap)/sum(wp); g+=[b*x for x in wp]
+        return g,max(g)
     c0=[];cp=[]
     for x in ds:
         if first<PEAK_DAY and x<=PEAK_DAY: t=(x-first)/(PEAK_DAY-first); c0.append(s0*(1-t)); cp.append(t)
@@ -41,7 +50,7 @@ def plan(s0,rem):
     return g,P
 def series(hd,done,target):
     b7=float(hd[-7:].mean()); y=float(hd[-1]); s0=max(max(y,b7)*F,float(np.ceil(hd.max()*1.05))); rem=target-done
-    g,P=plan(s0,rem); cum=(done+np.cumsum(g)).tolist()
+    M=target*MILE/TH; g,P=plan(s0,rem,M-done); cum=(done+np.cumsum(g)).tolist()
     x=np.arange(1,ND); sl,ic=np.polyfit(x,hd[1:],1)
     fit=np.maximum(ic+sl*np.arange(ND,30),0)
     M=target*MILE/TH
@@ -60,7 +69,7 @@ F=max(1.0,CR_START/max(_c[-1],_c[-7:].mean()))
 print('start factor',round(F,3))
 hs=d[d.hin]; hsum=int(hs.groupby('date').size().reindex(days,fill_value=0).sum())
 chd=hs.groupby('date').size().reindex(days,fill_value=0).values
-out={'days':lab,'dnum':[x.day for x in days],'LAST':LAST,'REM':REM,'milestone':MILE,'F':F,'mileDay':MILE_DAY,'peakDay':PEAK_DAY,
+out={'days':lab,'dnum':[x.day for x in days],'LAST':LAST,'REM':REM,'milestone':MILE,'F':F,'mileDay':MILE_DAY,'peakDay':(MILE_DAY if (STRICT and LAST<MILE_DAY) else PEAK_DAY),'strict':bool(STRICT and LAST<MILE_DAY),
  'co':series(chd,hsum,TH)}
 out['co'].update(calls=len(d),odia=int((d.Language=='Odia').sum()),eng=int((d.Language=='English').sum()),
  reg={l:int((d.Language==l).sum()) for l in REG},unassigned=int(hs[hs.team=='UN'].shape[0]))
