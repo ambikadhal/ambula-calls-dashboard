@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Hindi Calls Dashboard</title>
 <style>
 :root{--bg:#f3f5f9;--card:#fff;--ink:#16202e;--mut:#64708a;--line:#e3e8f0;--blue:#2f6fed;--org:#f08a24;--teal:#12a594;--grn:#16a34a;--red:#e5484d;--amb:#e0a100;--hero1:#1d3a8a;--hero2:#2f6fed;--shade:rgba(240,138,36,.10);--soft:#eef3ff}
@@ -12,7 +12,7 @@ nav{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px so
 nav button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:22px;padding:8px 15px;font:inherit;font-size:14px;cursor:pointer;white-space:nowrap;transition:.15s}
 nav button:hover{border-color:var(--blue)}nav button.on{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
 main{max-width:1120px;margin:0 auto;padding:14px 14px 40px}
-.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(330px,1fr))}
+.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(auto-fit,minmax(130px,1fr))}.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(min(330px,100%),1fr))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 1px 3px rgba(20,30,60,.04)}
 .card h2{margin:0 0 2px;font-size:16px}.sub{color:var(--mut);font-size:13px;margin:0 0 10px}
 .hero{display:flex;gap:16px;align-items:center;background:linear-gradient(120deg,var(--hero1),var(--hero2));color:#fff;border:0;flex-wrap:wrap}
@@ -34,13 +34,56 @@ input,select{font:inherit;font-size:14px;padding:8px 11px;border:1px solid var(-
 .flt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}.seg button{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
 .seg button:first-child{border-radius:9px 0 0 9px}.seg button:last-child{border-radius:0 9px 9px 0}.seg button.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .heat{display:grid;grid-template-columns:54px repeat(24,1fr);gap:2px;font-size:10px}.heat div{height:19px;border-radius:3px}.heat .h{height:auto;text-align:center;color:var(--mut)}.heat .r{height:19px;line-height:19px;color:var(--mut);font-size:11px}
-.acts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}.act{display:flex;gap:10px;background:var(--soft);border-radius:12px;padding:11px}.act .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;text-align:center;line-height:28px;font-weight:700;font-size:14px}
+.acts{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}.act{display:flex;gap:10px;background:var(--soft);border-radius:12px;padding:11px}.act .n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;text-align:center;line-height:28px;font-weight:700;font-size:14px}
 .act b{display:block}.act span{font-size:13.5px;color:var(--ink)}
 .help{font-size:13px;color:var(--mut);background:var(--soft);border-radius:10px;padding:8px 11px;margin:8px 0}
 details{margin-top:12px}summary{cursor:pointer;color:var(--blue);font-weight:600}
 .tcard{cursor:pointer;transition:.15s;border-left:5px solid var(--c)}.tcard:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(20,30,60,.12)}
 footer{color:var(--mut);font-size:12px;text-align:center;padding:16px}
 .ring{flex:0 0 96px}.ring text{fill:#fff}
+
+/* ---- motion + mobile layer ---- */
+header{background:linear-gradient(120deg,var(--hero1),var(--hero2),var(--hero1));background-size:220% 100%;animation:flow 14s ease-in-out infinite alternate;position:relative;overflow:hidden}
+header:after,.hero:after{content:"";position:absolute;right:-60px;top:-70px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 68%);animation:float 9s ease-in-out infinite alternate;pointer-events:none}
+.hero{position:relative;overflow:hidden;background-size:220% 100%;animation:flow 14s ease-in-out infinite alternate;box-shadow:0 10px 26px rgba(29,58,138,.28)}
+@keyframes flow{to{background-position:100% 0}}@keyframes float{to{transform:translate(-26px,22px) scale(1.15)}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}}@keyframes fade{from{opacity:0}}
+.rise{animation:rise .5s cubic-bezier(.2,.8,.2,1) both}.hero.rise{animation:rise .5s cubic-bezier(.2,.8,.2,1) both,flow 14s ease-in-out infinite alternate}
+.gb{transform-box:fill-box;transform-origin:50% 100%;animation:grow .65s cubic-bezier(.2,.8,.2,1) both}.gl{animation:fade .9s .25s ease both}
+.bar i{transition:width 1s cubic-bezier(.2,.8,.2,1)}.ring circle{transition:stroke-dasharray 1.3s cubic-bezier(.2,.8,.2,1)}
+.card,.tile{transition:transform .2s,box-shadow .2s}.card:hover,.tile:hover{box-shadow:0 8px 22px rgba(20,30,60,.10)}
+nav button{display:flex;align-items:center;gap:6px}nav .ic{font-size:15px}nav .ls{display:none}
+nav button.on{box-shadow:0 4px 12px rgba(47,111,237,.35)}
+.flt .row2{display:flex;gap:8px;flex:1 1 auto}.flt .row2 select{flex:1;min-width:0}.flt .q{flex:1 1 220px;min-width:0}
+.so{display:none}.seg{display:flex;overflow-x:auto;gap:6px;max-width:100%;-webkit-overflow-scrolling:touch}.seg button{border-radius:20px!important;white-space:nowrap}.seg em{font-style:normal;opacity:.7;margin-left:3px;font-size:11.5px}
+.meta{font-size:12.5px;color:var(--mut);margin:0 0 6px}
+.cl{display:grid;gap:10px}
+.cc{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--c,var(--blue));border-radius:14px;padding:12px;cursor:pointer;box-shadow:0 1px 3px rgba(20,30,60,.05);animation:rise .35s cubic-bezier(.2,.8,.2,1) both;transition:transform .15s,box-shadow .15s}
+.cc:active{transform:scale(.985)}.cc.open{box-shadow:0 8px 22px rgba(20,30,60,.14)}
+.cc .ct{display:flex;align-items:center;gap:8px}.cc .code{font-size:18px;letter-spacing:.3px}.cc .tm{font-size:12px;color:var(--mut);flex:1}.cc .chip{font-size:12px}
+.cc .pg{margin:9px 0 4px}.cc .pg small{display:block;margin-top:4px;color:var(--mut);font-size:12.5px}
+.cc .st4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.cc .st4>div{background:var(--soft);border-radius:10px;padding:6px 4px;text-align:center}.cc .st4 b{display:block;font-size:16px;line-height:1.2}.cc .st4 span{font-size:11px;color:var(--mut)}
+.cc .st4 .g{background:var(--blue)}.cc .st4 .g b,.cc .st4 .g span{color:#fff}
+.cc .cd{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px;cursor:default}.cc .more2{font-size:12.5px;color:var(--mut)}
+.mre{text-align:center}.mre button{margin-top:12px;border:1px solid var(--blue);background:transparent;color:var(--blue);border-radius:22px;padding:10px 22px;font:inherit;font-weight:600;cursor:pointer}
+.stk{position:sticky;top:0;z-index:6;background:var(--card);padding:8px 0}
+details.how{margin-top:10px}
+@media(max-width:700px){
+ body{padding-bottom:calc(74px + env(safe-area-inset-bottom))}
+ header{padding:14px 14px 12px}header h1{font-size:19px}
+ nav{position:fixed;top:auto;bottom:0;left:0;right:0;border-top:1px solid var(--line);border-bottom:0;box-shadow:0 -4px 16px rgba(0,0,0,.10);padding:6px 4px calc(6px + env(safe-area-inset-bottom));gap:2px;overflow:visible}
+ nav button{flex:1;flex-direction:column;gap:1px;border:0;border-radius:12px;padding:6px 2px;font-size:11px;min-width:0}
+ nav .ic{font-size:20px}nav .lf{display:none}nav .ls{display:inline}nav button.on{background:var(--soft);color:var(--blue);box-shadow:none}
+ main{padding:10px 10px 24px}.card{padding:12px;border-radius:16px}
+ .hero{padding:16px}.hero .big{font-size:38px}.ring{flex:0 0 78px;width:78px}
+ .tile b{font-size:20px}.grid{gap:10px}.so{display:block}.seg button{padding:7px 13px;font-size:13.5px}
+ input,select{font-size:16px;padding:10px 12px}
+ .flt{gap:8px}.stk{margin:0 -4px;padding:8px 4px}
+ th,td{padding:7px 6px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
 </style></head><body>
 <header><h1>Hindi call target tracker</h1><p id="hsub"></p></header>
 <nav id="nav"></nav><main id="main"></main>
@@ -57,7 +100,7 @@ const MONTH=Array.from({length:30},(_,i)=>i+1);
 const pad=(a,at)=>MONTH.map((_,i)=>{const j=i-at;return j>=0&&j<a.length?a[j]:null});
 /* ---------- interactive chart ---------- */
 function mkChart(host,o){
- const hidden=new Set(),W=640,H=o.h||230,m={l:42,r:12,t:12,b:26},iw=W-m.l-m.r,ih=H-m.t-m.b,n=o.x.length,bw=iw/n;
+ const hidden=new Set(),NAR=(host.clientWidth||640)<520,W=NAR?400:640,H=o.h||230,m={l:NAR?36:42,r:10,t:12,b:26};let first=true,iw=W-m.l-m.r,ih=H-m.t-m.b,n=o.x.length,bw=iw/n;
  host.classList.add('chart');host.innerHTML='<div class="svgbox"></div><div class="leg"></div><div class="tip"></div>';
  const box=host.querySelector('.svgbox'),leg=host.querySelector('.leg'),tip=host.querySelector('.tip');
  const series=[...(o.bars||[]).map(s=>({...s,t:'b'})),...(o.lines||[]).map(s=>({...s,t:'l'}))];
@@ -68,14 +111,14 @@ function mkChart(host,o){
   const X=i=>m.l+(i+.5)*bw,Y=v=>m.t+ih-v/mx*ih;let s=`<svg viewBox="0 0 ${W} ${H}">`;
   for(let k=0;k<=4;k++){const y=Y(st*k);s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${m.l-6}" y="${y+4}" font-size="11" text-anchor="end" fill="var(--mut)">${lk(st*k)}</text>`}
   (o.shade||[]).forEach(i=>s+=`<rect x="${m.l+i*bw}" y="${m.t}" width="${bw}" height="${ih}" fill="var(--shade)"/>`);
-  o.x.forEach((t,i)=>{if(n<=14||i%2==0||i==n-1)s+=`<text x="${X(i)}" y="${H-8}" font-size="11" text-anchor="middle" fill="var(--mut)">${t}</text>`});
-  vis.filter(q=>q.t=='b').forEach(q=>q.v.forEach((v,i)=>{if(v==null)return;const h=v/mx*ih;s+=`<rect x="${m.l+i*bw+1.5}" y="${m.t+ih-h}" width="${Math.max(bw-3,1)}" height="${h}" rx="3" fill="${q.c}" opacity="${q.o||1}"/>`}));
+  o.x.forEach((t,i)=>{if(i%Math.max(1,Math.ceil(n*(NAR?30:22)/iw))==0)s+=`<text x="${X(i)}" y="${H-8}" font-size="11" text-anchor="middle" fill="var(--mut)">${t}</text>`});
+  vis.filter(q=>q.t=='b').forEach(q=>q.v.forEach((v,i)=>{if(v==null)return;const h=v/mx*ih;s+=`<rect ${first?`class="gb" style="animation-delay:${Math.min(i*16,460)}ms" `:''}x="${m.l+i*bw+1.5}" y="${m.t+ih-h}" width="${Math.max(bw-3,1)}" height="${h}" rx="3" fill="${q.c}" opacity="${q.o||1}"/>`}));
   vis.filter(q=>q.t=='l').forEach(q=>{let d='',pen=false;q.v.forEach((v,i)=>{if(v==null){pen=false;return}d+=(pen?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1);pen=true});
-   s+=`<path d="${d}" fill="none" stroke="${q.c}" stroke-width="${q.w||2.4}" ${q.dash?'stroke-dasharray="6 5"':''} stroke-linejoin="round" stroke-linecap="round"/>`;
+   s+=`<path ${first?'class="gl" ':''}d="${d}" fill="none" stroke="${q.c}" stroke-width="${q.w||2.4}" ${q.dash?'stroke-dasharray="6 5"':''} stroke-linejoin="round" stroke-linecap="round"/>`;
    if(q.dots)q.v.forEach((v,i)=>{if(v!=null)s+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3" fill="${q.c}"/>`})});
   (o.hlines||[]).forEach(h=>{const y=Y(h.v);s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="${h.c||'var(--org)'}" stroke-dasharray="4 4" stroke-width="1.5"/><text x="${W-m.r-2}" y="${y-4}" font-size="11" text-anchor="end" fill="${h.c||'var(--org)'}" font-weight="600">${h.label}</text>`});
   (o.vlines||[]).forEach(v=>{const x=X(v.i);s+=`<line x1="${x}" x2="${x}" y1="${m.t}" y2="${m.t+ih}" stroke="${v.c||'var(--mut)'}" stroke-dasharray="3 4"/><text x="${x+3}" y="${m.t+11}" font-size="10.5" fill="${v.c||'var(--mut)'}">${v.label}</text>`});
-  s+=`<rect class="hv" x="0" y="${m.t}" width="${bw}" height="${ih}" fill="var(--blue)" opacity="0"/></svg>`;box.innerHTML=s;
+  s+=`<rect class="hv" x="0" y="${m.t}" width="${bw}" height="${ih}" fill="var(--blue)" opacity="0"/></svg>`;box.innerHTML=s;first=false;
   const svg=box.querySelector('svg'),hv=svg.querySelector('.hv');
   const move=e=>{const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)*W/r.width;let i=Math.floor((px-m.l)/bw);if(i<0||i>=n){tip.style.display='none';hv.setAttribute('opacity',0);return}
    hv.setAttribute('x',m.l+i*bw);hv.setAttribute('opacity',.08);
@@ -91,7 +134,7 @@ function mkChart(host,o){
 const mount=(id,o)=>setTimeout(()=>{const e=document.getElementById(id);if(e)mkChart(e,o)},0);
 const tlab=i=>dn(i+1);
 /* ---------- helpers ---------- */
-const ring=(p,c)=>{const r=40,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="${r}" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="10"/><circle cx="50" cy="50" r="${r}" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C*Math.min(p,1)} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="56" text-anchor="middle" font-size="20" font-weight="800">${pc(p)}</text></svg>`};
+const ring=(p,c)=>{const r=40,C=2*Math.PI*r;return `<svg class="ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="${r}" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="10"/><circle cx="50" cy="50" r="${r}" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-dasharray="0 ${C}" data-d="${C*Math.min(p,1)} ${C}" transform="rotate(-90 50 50)"/><text x="50" y="56" text-anchor="middle" font-size="20" font-weight="800">${pc(p)}</text></svg>`};
 const bar=(p,mk)=>`<div class="bar"><i style="width:${Math.min(Math.max(p,0),1)*100}%"></i>${mk!=null?`<u style="left:${mk*100}%"></u>`:''}</div>`;
 function mileInfo(r,who){const m=r.mile,done=r.hindi;let t='';
  if(LAST>=MD){const at=r.cumact[MD-1];t=at>=m.target?`<span class="chip ok">Milestone met on ${MD} Nov</span>`:`<span class="chip bad">${MD} Nov milestone missed by ${f(m.target-at)}</span>`}
@@ -118,23 +161,44 @@ function ckptTable(r){const rows=Object.entries(r.ckpt),all=[15,20,25,30].map(n=
  const body=[15,20,25,30].map(n=>{if(n<=LAST){const v=r.cumact[n-1];return `<tr><td>${n} Nov</td><td>${f(v)}</td><td>–</td><td><span class="chip info">done</span></td></tr>`}
   const p=r.ckpt[n],need=(p-r.hindi)/(n-LAST);return `<tr><td>${n} Nov</td><td>${f(p)}</td><td>${f(need)}/day</td><td><span class="chip warn">ahead</span></td></tr>`}).join('');
  return `<div class="tw"><table><tr><th>By end of</th><th>Total needed</th><th>Pace from now</th><th></th></tr>${body}</table></div>`}
-/* ---------- code table ---------- */
+/* ---------- code table (cards on phones, table on desktop) ---------- */
 function codeTable(host,rows,o){
- const st={q:'',tf:'ALL',sf:'ALL',k:'hindi',d:-1,open:null};
- host.innerHTML=`<div class="flt">${o.search?'<input class="q" type="search" placeholder="Search a code, e.g. CRNI">':''}${o.teams?'<select class="tf"><option value="ALL">All teams</option>'+TK.map(t=>`<option value="${t}">${D.teams[t].name}</option>`).join('')+'</select>':''}<div class="seg">${['ALL','On goal','Close','Behind'].map(s=>`<button data-s="${s}" class="${s=='ALL'?'on':''}">${s=='ALL'?'All':s}</button>`).join('')}</div></div><div class="tw"><table></table></div><p class="help">Goal today = the code's last-7-day average × the team's speed-up for today (and always at least 5% above that code's own best day so far). <b>On goal</b> = last 3 days average at or above goal · <b>Close</b> = at least 60% · <b>Behind</b> = below 60%. Tap a row for its daily chart.</p>`;
- const tb=host.querySelector('table');
- const draw=()=>{let rs=rows.filter(r=>(!st.q||r.code.includes(st.q))&&(st.tf=='ALL'||r.team==st.tf)&&(st.sf=='ALL'||r.status==st.sf));
-  rs.sort((a,b)=>(a[st.k]>b[st.k]?1:a[st.k]<b[st.k]?-1:0)*st.d);const cols=[['code','Code'],['team','Team'],['hindi','Hindi total'],['y','Yesterday'],['b3','3-day avg'],['best','Best day'],['goal','Goal today'],['pk','Goal at peak'],['status','Status']];
-  tb.innerHTML=`<tr>${cols.filter(c=>o.teams||c[0]!='team').map(c=>`<th class="s" data-k="${c[0]}">${c[1]}${st.k==c[0]?(st.d<0?' ▼':' ▲'):''}</th>`).join('')}<th>Progress</th></tr>`+rs.slice(0,300).map(r=>{const p=r.goal?r.b3/r.goal:0,cls=r.status=='On goal'?'ok':r.status=='Close'?'warn':'bad';
-   return `<tr class="row" data-c="${r.code}"><td><b>${r.code}</b></td>${o.teams?`<td class="l">${D.teams[r.team].name.replace('mDigital-','')}</td>`:''}<td>${f(r.hindi)}</td><td>${r.y}</td><td>${f(r.b3)}</td><td>${r.best}</td><td><b>${f(r.goal)}</b></td><td>${f(r.pk)}</td><td><span class="chip ${cls}">${r.status}</span></td><td style="min-width:90px">${bar(p)}</td></tr>`+(st.open==r.code?`<tr><td colspan="10" style="padding:10px 4px"><div id="cd"></div></td></tr>`:'')}).join('')+(rs.length>300?`<tr><td colspan="10" class="l">Showing first 300 of ${rs.length}. Use search.</td></tr>`:'');
-  tb.querySelectorAll('th.s').forEach(th=>th.onclick=()=>{const k=th.dataset.k;st.d=st.k==k?-st.d:(k=='code'||k=='team'?1:-1);st.k=k;draw()});
-  tb.querySelectorAll('tr.row').forEach(tr=>tr.onclick=()=>{st.open=st.open==tr.dataset.c?null:tr.dataset.c;draw()});
-  if(st.open){const r=rows.find(x=>x.code==st.open);mkChart(tb.querySelector('#cd'),{x:D.dnum,tl:i=>D.days[i],h:150,bars:[{n:r.code+' Hindi calls',c:COL[r.team],v:r.daily}],hlines:[{v:r.goal,label:'goal today '+f(r.goal)}]})}};
- const q=host.querySelector('.q');if(q)q.oninput=e=>{st.q=e.target.value.toUpperCase().trim();draw()};const tf=host.querySelector('.tf');if(tf)tf.onchange=e=>{st.tf=e.target.value;draw()};
- host.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{st.sf=b.dataset.s;host.querySelectorAll('.seg button').forEach(x=>x.classList.toggle('on',x==b));draw()});draw();
+ const mq=matchMedia('(max-width:700px)');
+ const st={q:'',tf:'ALL',sf:'ALL',k:'hindi',d:-1,open:null,lim:30};
+ const SORTS=[['hindi','Most Hindi calls'],['goal','Highest goal today'],['gap','Furthest behind goal'],['y','Yesterday'],['b3','3-day average'],['best','Best day'],['code','Code A–Z']];
+ host.innerHTML=`<div class="flt${o.search?' stk':''}">${o.search?'<input class="q" type="search" placeholder="🔍 Search a code, e.g. CRNI" autocomplete="off">':''}<div class="row2">${o.teams?'<select class="tf"><option value="ALL">All teams</option>'+TK.map(t=>`<option value="${t}">${D.teams[t].name}</option>`).join('')+'</select>':''}<select class="so">${SORTS.map(s=>`<option value="${s[0]}">Sort: ${s[1]}</option>`).join('')}</select></div><div class="seg"></div></div><div class="meta"></div><div class="tw tbl"><table></table></div><div class="cl"></div><div class="mre"></div><details class="how"><summary>How goals are set</summary><p class="help">Goal today = the code's last-7-day average × the team's speed-up for today, and always at least 5% above that code's own best day so far. <b>On goal</b> = last 3 days average at or above goal · <b>Close</b> = at least 60% · <b>Behind</b> = below 60%. Tap a code for its daily chart.</p></details>`;
+ const $=s=>host.querySelector(s),tb=$('table'),cl=$('.cl'),seg=$('.seg'),meta=$('.meta'),mre=$('.mre'),so=$('.so');
+ const cls=s=>s=='On goal'?'ok':s=='Close'?'warn':'bad';
+ const card=r=>{const p=r.goal?r.b3/r.goal:0,op=st.open==r.code;
+  return `<div class="cc${op?' open':''}" data-c="${r.code}" style="--c:${COL[r.team]}"><div class="ct"><b class="code">${r.code}</b><span class="tm">${o.teams?D.teams[r.team].name.replace('mDigital-',''):''}</span><span class="chip ${cls(r.status)}">${r.status}</span></div>
+  <div class="pg">${bar(p)}<small>Recent pace <b>${f(r.b3)}</b>/day · ${pc(p)} of today's goal</small></div>
+  <div class="st4"><div><b>${r.y}</b><span>Yesterday</span></div><div><b>${r.best}</b><span>Best day</span></div><div><b>${f(r.hindi)}</b><span>Total</span></div><div class="g"><b>${f(r.goal)}</b><span>Goal today</span></div></div>
+  ${op?`<div class="cd"></div><div class="more2">Goal at peak: <b>${f(r.pk)}</b>/day</div>`:''}</div>`};
+ const draw=()=>{if(!host.isConnected)return;const M=mq.matches;
+  const base=rows.filter(r=>(!st.q||r.code.includes(st.q))&&(st.tf=='ALL'||r.team==st.tf));
+  const cnt={ALL:base.length};base.forEach(r=>cnt[r.status]=(cnt[r.status]||0)+1);
+  const rs=base.filter(r=>st.sf=='ALL'||r.status==st.sf);
+  rs.sort((a,b)=>(a[st.k]>b[st.k]?1:a[st.k]<b[st.k]?-1:0)*st.d);
+  seg.innerHTML=['ALL','On goal','Close','Behind'].map(s=>`<button data-s="${s}" class="${st.sf==s?'on':''}">${s=='ALL'?'All':s}<em>${cnt[s]||0}</em></button>`).join('');
+  meta.textContent=`${rs.length} code${rs.length==1?'':'s'}`+(st.q?` matching "${st.q}"`:'');so.value=SORTS.some(s=>s[0]==st.k)?st.k:'hindi';
+  if(M){tb.innerHTML='';cl.innerHTML=rs.length?rs.slice(0,st.lim).map(card).join(''):'<div class="help">No codes match. Try another filter.</div>';
+   mre.innerHTML=rs.length>st.lim?`<button>Show ${Math.min(30,rs.length-st.lim)} more · ${rs.length-st.lim} left</button>`:'';
+   if(st.open){const r=rows.find(x=>x.code==st.open),el=cl.querySelector('.cc.open .cd');if(r&&el)mkChart(el,{x:D.dnum,tl:i=>D.days[i],h:160,bars:[{n:r.code+' Hindi calls',c:COL[r.team],v:r.daily}],hlines:[{v:r.goal,label:'goal '+f(r.goal)}]})}}
+  else{cl.innerHTML='';mre.innerHTML='';const cols=[['code','Code'],['team','Team'],['hindi','Hindi total'],['y','Yesterday'],['b3','3-day avg'],['best','Best day'],['goal','Goal today'],['pk','Goal at peak'],['status','Status']];
+   tb.innerHTML=`<tr>${cols.filter(c=>o.teams||c[0]!='team').map(c=>`<th class="s" data-k="${c[0]}">${c[1]}${st.k==c[0]?(st.d<0?' ▼':' ▲'):''}</th>`).join('')}<th>Progress</th></tr>`+rs.slice(0,300).map(r=>{const p=r.goal?r.b3/r.goal:0;
+    return `<tr class="row" data-c="${r.code}"><td><b>${r.code}</b></td>${o.teams?`<td class="l">${D.teams[r.team].name.replace('mDigital-','')}</td>`:''}<td>${f(r.hindi)}</td><td>${r.y}</td><td>${f(r.b3)}</td><td>${r.best}</td><td><b>${f(r.goal)}</b></td><td>${f(r.pk)}</td><td><span class="chip ${cls(r.status)}">${r.status}</span></td><td style="min-width:90px">${bar(p)}</td></tr>`+(st.open==r.code?`<tr><td colspan="10" style="padding:10px 4px"><div id="cd"></div></td></tr>`:'')}).join('')+(rs.length>300?`<tr><td colspan="10" class="l">Showing first 300 of ${rs.length}. Use search.</td></tr>`:'');
+   tb.querySelectorAll('th.s').forEach(th=>th.onclick=()=>{const k=th.dataset.k;st.d=st.k==k?-st.d:(k=='code'||k=='team'?1:-1);st.k=k;draw()});
+   tb.querySelectorAll('tr.row').forEach(tr=>tr.onclick=()=>{st.open=st.open==tr.dataset.c?null:tr.dataset.c;draw()});
+   if(st.open){const r=rows.find(x=>x.code==st.open);if(r&&tb.querySelector('#cd'))mkChart(tb.querySelector('#cd'),{x:D.dnum,tl:i=>D.days[i],h:150,bars:[{n:r.code+' Hindi calls',c:COL[r.team],v:r.daily}],hlines:[{v:r.goal,label:'goal today '+f(r.goal)}]})}}};
+ cl.onclick=e=>{const c=e.target.closest('.cc');if(!c||e.target.closest('.cd'))return;st.open=st.open==c.dataset.c?null:c.dataset.c;draw()};
+ mre.onclick=e=>{if(e.target.closest('button')){st.lim+=30;draw()}};
+ seg.onclick=e=>{const b=e.target.closest('button');if(b){st.sf=b.dataset.s;st.lim=30;draw()}};
+ so.onchange=e=>{st.k=e.target.value;st.d=st.k=='code'?1:-1;st.lim=30;draw()};
+ const q=$('.q');if(q)q.oninput=e=>{st.q=e.target.value.toUpperCase().trim();st.lim=30;draw()};const tf=$('.tf');if(tf)tf.onchange=e=>{st.tf=e.target.value;st.lim=30;draw()};
+ mq.addEventListener('change',draw);draw();fxBars(host);
 }
 function mkRows(src,T){const r=D.teams[T],ratio=r.goal[0]/r.b7,pr=r.peak/r.b7;
- return src.map(x=>{const b7=avg(x.daily.slice(-7)),b3=avg(x.daily.slice(-3)),best=Math.max(...x.daily),g0=b7*ratio,g=best>0?Math.max(g0,Math.ceil(best*1.05)):g0;return {code:x.code,team:T,hindi:x.hindi,daily:x.daily,y:x.daily[x.daily.length-1],b3,best,goal:g,pk:Math.max(b7*pr,g0?g*pr/ratio:0),status:g==0?'Behind':b3>=g?'On goal':b3>=.6*g?'Close':'Behind'}})}
+ return src.map(x=>{const b7=avg(x.daily.slice(-7)),b3=avg(x.daily.slice(-3)),best=Math.max(...x.daily),g0=b7*ratio,g=best>0?Math.max(g0,Math.ceil(best*1.05)):g0;return {code:x.code,team:T,hindi:x.hindi,daily:x.daily,y:x.daily[x.daily.length-1],b3,best,goal:g,gap:g-b3,pk:Math.max(b7*pr,g0?g*pr/ratio:0),status:g==0?'Behind':b3>=g?'On goal':b3>=.6*g?'Close':'Behind'}})}
 /* ---------- pages ---------- */
 function overview(){const c=D.co,pcnt=c.hindi/c.target,rise=(c.peak-c.s0)/Math.max(PEAK-first,1);
  let h=`<div class="card hero">${ring(pcnt)}<div class="txt"><small>Company goal today · ${dn(first)}</small><div class="big">${f(c.goal[0])}</div><small>Hindi calls · yesterday we did <b>${f(c.yest)}</b>. Goal rises about ${f(rise)} a day until ${PEAK} Nov (to ~${f(c.peak)}), then ${D.strict?'eases to about '+f(c.goal[c.goal.length-1])+' a day':'stays almost flat'}.</small></div></div>
@@ -179,14 +243,26 @@ function mount_team(T){const r=D.teams[T],col=COL[T];planMount('t',r,col);
  r.heat.forEach((row,d)=>{s+=`<div class="r">${D.days[d].split(' ').slice(0,2).join(' ')}</div>`+row.map((v,h)=>`<div title="${D.days[d]} ${h}:00 → ${v} calls" style="background:${col};opacity:${.07+.93*v/mx}"></div>`).join('')});document.getElementById('hm').innerHTML=s}
 function codesPage(){return `<div class="card"><h2>All referral codes (${D.codes.length})</h2><p class="sub">Every code with Hindi calls, all three teams. Search, filter, sort, and tap a row.</p><div id="ca"></div></div>`}
 function mount_codes(){const rows=D.codes.flatMap(c=>mkRows([{code:c[0],hindi:c[2],daily:c[4]}],c[1]));codeTable(document.getElementById('ca'),rows,{search:1,teams:1})}
+/* ---------- motion helpers ---------- */
+const REDUCE=matchMedia('(prefers-reduced-motion:reduce)').matches;
+function fxBars(root){root.querySelectorAll('.bar i').forEach(i=>{const w=i.style.width;if(REDUCE)return;i.style.width='0%';requestAnimationFrame(()=>requestAnimationFrame(()=>i.style.width=w))})}
+function fx(root){
+ root.querySelectorAll('.card,.tile,.act,.tcard').forEach((e,i)=>{e.classList.add('rise');e.style.animationDelay=Math.min(i*40,520)+'ms'});
+ fxBars(root);
+ root.querySelectorAll('circle[data-d]').forEach(c=>requestAnimationFrame(()=>requestAnimationFrame(()=>c.style.strokeDasharray=c.dataset.d)));
+ if(REDUCE)return;
+ root.querySelectorAll('.big,.tile b').forEach(e=>{if(e.firstElementChild)return;const m=e.textContent.match(/^([^\d]*)([\d,]+(?:\.\d+)?)(.*)$/);if(!m)return;
+  const v=parseFloat(m[2].replace(/,/g,'')),dec=(m[2].split('.')[1]||'').length,t0=performance.now(),D0=900;
+  const step=now=>{const k=Math.min((now-t0)/D0,1),e3=1-Math.pow(1-k,3);e.textContent=m[1]+(v*e3).toLocaleString('en-IN',{minimumFractionDigits:dec,maximumFractionDigits:dec})+m[3];if(k<1)requestAnimationFrame(step)};requestAnimationFrame(step)})}
 /* ---------- router ---------- */
-const TABS=[['ov','Overview'],['CR','Craftzens'],['WB','ParisevaOne'],['OD','mDigital-OD'],['codes','All codes']];
+const TABS=[['ov','Overview','🏠','Home'],['CR','Craftzens','🟦','Craftzens'],['WB','ParisevaOne','🟧','Pariseva'],['OD','mDigital-OD','🟩','OD'],['codes','All codes','🔎','Codes']];
 function go(k){location.hash=k;}
-function render(){let k=location.hash.slice(1);if(!TABS.some(t=>t[0]==k))k='ov';
- document.getElementById('nav').innerHTML=TABS.map(t=>`<button class="${t[0]==k?'on':''}" onclick="go('${t[0]}')">${t[1]}</button>`).join('');
+function render(keep){let k=location.hash.slice(1);if(!TABS.some(t=>t[0]==k))k='ov';
+ document.getElementById('nav').innerHTML=TABS.map(t=>`<button class="${t[0]==k?'on':''}" onclick="go('${t[0]}')"><span class="ic">${t[2]}</span><span class="lf">${t[1]}</span><span class="ls">${t[3]}</span></button>`).join('');
  const m=document.getElementById('main');m.innerHTML=k=='ov'?overview():k=='codes'?codesPage():team(k);
- if(k=='ov')mount_overview();else if(k=='codes')mount_codes();else mount_team(k);scrollTo(0,0)}
+ if(k=='ov')mount_overview();else if(k=='codes')mount_codes();else mount_team(k);fx(m);if(!keep)scrollTo(0,0);const on=document.querySelector('nav button.on');if(on&&on.scrollIntoView)on.scrollIntoView({inline:'center',block:'nearest'})}
 document.getElementById('hsub').innerHTML=`<span class="pill">Data up to ${D.days[N-1]}</span><span class="pill">${REM} days left</span><span class="pill">Target by 30 Nov</span>`;
-addEventListener('hashchange',render);render();
+let _b=innerWidth<520?1:innerWidth<700?2:3,_t;addEventListener('resize',()=>{clearTimeout(_t);_t=setTimeout(()=>{const b=innerWidth<520?1:innerWidth<700?2:3;if(b!=_b){_b=b;render(1)}},250)});
+addEventListener('hashchange',()=>render());render();
 </script><script data-goatcounter="https://hindicallscounter.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body></html>
