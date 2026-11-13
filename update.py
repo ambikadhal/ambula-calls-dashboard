@@ -92,7 +92,9 @@ for T in TARGETS:
     for l in SCOPE[T]:
         own=int((S.Language==l).sum()); comp=int((d.Language==l).sum())
         tg=TELSPLIT[T] if l=='Telugu' else 1500; done=own if l=='Telugu' else comp
-        LR.append(dict(lang=l,target=tg,done=done,own=own,comp=comp,perday=max(tg-done,0)/REM))
+        src=S if l=='Telugu' else d
+        dl=src[src.Language==l].groupby('date').size().reindex(days,fill_value=0).values.tolist()
+        LR.append(dict(lang=l,target=tg,done=done,own=own,comp=comp,perday=max(tg-done,0)/REM,daily=dl))
     r['langs']=LR
     h=H.groupby(['date','hour']).size().unstack(fill_value=0).reindex(index=days,columns=range(24),fill_value=0)
     r['heat']=h.values.tolist(); r['hourAvg']=h.loc[days[1:]].mean().round(1).tolist()
