@@ -40,7 +40,7 @@ def plan(s0,rem):
     else: g=[a+b*P for a,b in zip(c0,cp)]
     return g,P
 def series(hd,done,target):
-    b7=float(hd[-7:].mean()); y=float(hd[-1]); s0=max(y,b7)*F; rem=target-done
+    b7=float(hd[-7:].mean()); y=float(hd[-1]); s0=max(max(y,b7)*F,float(np.ceil(hd.max()*1.05))); rem=target-done
     g,P=plan(s0,rem); cum=(done+np.cumsum(g)).tolist()
     x=np.arange(1,ND); sl,ic=np.polyfit(x,hd[1:],1)
     fit=np.maximum(ic+sl*np.arange(ND,30),0)
