@@ -9,7 +9,8 @@ SCOPE={'CR':['Telugu','Kannada','Marathi','Tamil','Punjabi','Gujarati','Malayala
 TELSPLIT={'CR':2350,'OD':650}
 REG=['Telugu','Bangla','Kannada','Marathi','Tamil','Punjabi','Gujarati','Malayalam']
 HIN=['Hindi','Bhojpuri','Haryanvi']
-STRICT=True    # hit MILE by MILE_DAY EOD strictly
+MILESTONE=False  # no interim milestone: one smooth plan to the target
+STRICT=MILESTONE    # hit MILE by MILE_DAY EOD strictly
 CR_START=6000   # Craftzens goal for the first plan day is never below this; every other team/company is raised by the same factor
 
 files=sorted(glob.glob('data/*.xlsx'))
@@ -68,7 +69,7 @@ F=max(1.0,CR_START/max(_c[-1],_c[-7:].mean()))
 print('start factor',round(F,3))
 hs=d[d.hin]; hsum=int(hs.groupby('date').size().reindex(days,fill_value=0).sum())
 chd=hs.groupby('date').size().reindex(days,fill_value=0).values
-out={'days':lab,'dnum':[x.day for x in days],'LAST':LAST,'REM':REM,'milestone':MILE,'F':F,'mileDay':MILE_DAY,'peakDay':(MILE_DAY if (STRICT and LAST<MILE_DAY) else PEAK_DAY),'strict':bool(STRICT and LAST<MILE_DAY),
+out={'nomile':not MILESTONE,'days':lab,'dnum':[x.day for x in days],'LAST':LAST,'REM':REM,'milestone':MILE,'F':F,'mileDay':MILE_DAY,'peakDay':(MILE_DAY if (STRICT and LAST<MILE_DAY) else PEAK_DAY),'strict':bool(STRICT and LAST<MILE_DAY),
  'co':series(chd,hsum,TH,MILE)}
 out['co'].update(calls=len(d),odia=int((d.Language=='Odia').sum()),eng=int((d.Language=='English').sum()),
  reg={l:int((d.Language==l).sum()) for l in REG},unassigned=int(hs[hs.team=='UN'].shape[0]))
