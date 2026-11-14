@@ -46,7 +46,7 @@ footer{text-align:center;color:var(--mut);font-size:12.5px;padding:6px 16px 28px
 const D=/*DATA*/null;
 const f=x=>Math.round(x).toLocaleString('en-IN'),avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:0,sum=a=>a.reduce((s,x)=>s+x,0);
 const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],isSun=n=>new Date(2026,10,n).getDay()==0;
-const HIN=['Hindi','Bhojpuri','Haryanvi'],N=D.days.length;
+const HIN=['Hindi','Bhojpuri','Haryanvi'],SKIP=['Odia','English'],N=D.days.length;
 const $=id=>document.getElementById(id),q=$('q'),sug=$('sug'),out=$('out');
 const names=Object.keys(D.codes);
 const hrl=h=>(h%12||12)+(h<12?' am':' pm');
@@ -99,14 +99,14 @@ function tips(c,x,a,h,langs){const T=[],tot=sum(a),y=a[N-1],b7=avg(a.slice(-7)),
  return T}
 /* ----- page ----- */
 function show(code){const c=D.codes[code],a=c.a,h=c.h,tot=sum(a),y=a[N-1],b7=avg(a.slice(-7)),best=Math.max(...a),bi=a.indexOf(best),oth=a.map((v,i)=>v-h[i]);
- const langs=Object.entries(c.l).map(([l,v])=>[l,sum(v),v[N-1],sum(v.slice(-3))]).sort((p,q)=>q[1]-p[1]);const mxl=Math.max(...langs.map(l=>l[1]),1);
+ const langs=Object.entries(c.l).filter(([l])=>!SKIP.includes(l)).map(([l,v])=>[l,sum(v),v[N-1],sum(v.slice(-3))]).sort((p,q)=>q[1]-p[1]);const mxl=Math.max(...langs.map(l=>l[1]),1);
  const act=a.filter(v=>v>0).length,qual=c.n?Math.round((1-c.nq/c.n)*100):0,P=c.n>=1;
  let H=`<div class="card hero"><div class="code">${code}${c.t?' · '+c.t:''}</div><div class="big" id="bg">${f(tot)}</div><small>total calls till ${D.days[N-1]}</small><br><span class="rk">🏅 Rank ${c.r} of ${D.n} codes</span></div>
  <div class="card"><div class="g"><div class="tile"><b>${y}</b><span>Yesterday</span></div><div class="tile"><b>${f(b7)}</b><span>Daily avg (7 days)</span></div><div class="tile"><b>${best}</b><span>Best day · ${D.dnum[bi]} Nov</span></div><div class="tile"><b>${f(sum(h))}</b><span>Hindi calls</span></div></div>
  <p class="sub" style="margin:10px 0 0">Active on ${act} of ${N} days · ${qual}% of calls qualified</p></div>
  <div class="card"><h2>💡 Tips to improve your count</h2><p class="sub">Based on your own calls</p><div class="tips">${tips(c,c,a,h,langs).map(t=>`<div class="tip"><div class="e">${t[0]}</div><div><b>${t[1]}</b><span>${t[2]}</span></div></div>`).join('')}</div></div>
  <div class="card"><h2>📊 Calls per day</h2><p class="sub">Tap a bar to see the numbers</p><div id="ch" class="chart"></div></div>
- <div class="card"><h2>🗣️ Language-wise count</h2><p class="sub">${langs.length>1?'Calls by language':'All your calls are in one language'}</p>${langs.map(l=>`<div class="lg"><div class="r"><b>${l[0]}</b><b>${f(l[1])}</b></div><div class="bar"><i style="width:0" data-w="${l[1]/mxl*100}"></i></div><div class="r"><span>${Math.round(l[1]/Math.max(tot,1)*100)}% of calls</span><span>Yesterday ${l[2]} · last 3 days ${l[3]}</span></div></div>`).join('')}</div>
+ <div class="card"><h2>🗣️ Language-wise count</h2><p class="sub">Calls by language</p>${langs.map(l=>`<div class="lg"><div class="r"><b>${l[0]}</b><b>${f(l[1])}</b></div><div class="bar"><i style="width:0" data-w="${l[1]/mxl*100}"></i></div><div class="r"><span>${Math.round(l[1]/Math.max(tot,1)*100)}% of calls</span><span>Yesterday ${l[2]} · last 3 days ${l[3]}</span></div></div>`).join('')}</div>
  <div class="card"><h2>🗓️ Day-wise count</h2><p class="sub">Newest first. Orange rows are Sundays.</p><div class="tw"><table><tr><th>Date</th><th>Total</th><th>Hindi</th><th>Other</th><th></th></tr>${a.map((v,i)=>i).reverse().map(i=>{const v=a[i],p=i?a[i-1]:null,d=p==null?'':v>p?`<span class="up">▲ ${v-p}</span>`:v<p?`<span class="dn">▼ ${p-v}</span>`:'–';return `<tr class="${isSun(D.dnum[i])?'sun':''}"><td>${WD[new Date(2026,10,D.dnum[i]).getDay()]} ${D.dnum[i]} Nov</td><td><b>${v}</b></td><td>${h[i]}</td><td>${oth[i]}</td><td>${d}</td></tr>`}).join('')}<tr><td><b>Total</b></td><td><b>${f(tot)}</b></td><td><b>${f(sum(h))}</b></td><td><b>${f(sum(oth))}</b></td><td></td></tr></table></div></div>`;
  out.innerHTML=H;chart($('ch'),h,oth);
  requestAnimationFrame(()=>requestAnimationFrame(()=>out.querySelectorAll('.bar i').forEach(i=>i.style.width=i.dataset.w+'%')));
