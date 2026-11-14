@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Call Count</title>
+<style>
+:root{--bg:#f3f5f9;--card:#fff;--ink:#16202e;--mut:#64708a;--line:#e3e8f0;--blue:#2f6fed;--org:#f08a24;--teal:#12a594;--grn:#16a34a;--red:#e5484d;--amb:#e0a100;--hero1:#1d3a8a;--hero2:#2f6fed;--soft:#eef3ff}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1420;--card:#172033;--ink:#e8edf6;--mut:#92a0ba;--line:#26334c;--blue:#6b9bff;--org:#ffa24d;--teal:#3fd0bd;--grn:#4ade80;--red:#ff7a7f;--amb:#f5c542;--hero1:#16296b;--hero2:#2a58c9;--soft:#1d2a45}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:linear-gradient(120deg,var(--hero1),var(--hero2));color:#fff;padding:22px 16px 62px;text-align:center}
+header h1{margin:0;font-size:22px}header p{margin:4px 0 0;font-size:13.5px;opacity:.9}
+main{max-width:720px;margin:0 auto;padding:0 12px 40px}
+.sbox{position:relative;margin:-40px 0 14px;z-index:5}
+.sbox input{width:100%;font:inherit;font-size:17px;padding:15px 16px 15px 46px;border:2px solid transparent;border-radius:16px;background:var(--card);color:var(--ink);box-shadow:0 8px 24px rgba(20,30,60,.18);outline:none;text-transform:uppercase}
+.sbox input::placeholder{text-transform:none;color:var(--mut)}.sbox input:focus{border-color:var(--blue)}
+.sbox .mg{position:absolute;left:16px;top:14px;font-size:19px;pointer-events:none}
+.sug{position:absolute;left:0;right:0;top:100%;margin-top:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 10px 28px rgba(20,30,60,.2);max-height:300px;overflow-y:auto;display:none}
+.sug button{display:flex;justify-content:space-between;width:100%;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;padding:12px 16px;cursor:pointer;text-align:left}
+.sug button:last-child{border:0}.sug button:hover,.sug button.hi{background:var(--soft)}.sug small{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px rgba(20,30,60,.04)}
+.card h2{margin:0 0 2px;font-size:16px}.sub{color:var(--mut);font-size:13px;margin:0 0 10px}
+.hero{background:linear-gradient(120deg,var(--hero1),var(--hero2));color:#fff;border:0;text-align:center;padding:20px 14px}
+.hero .code{font-size:15px;letter-spacing:1px;opacity:.9}.hero .big{font-size:56px;font-weight:800;line-height:1.1}.hero small{opacity:.9;font-size:13.5px}
+.hero .rk{display:inline-block;margin-top:8px;background:rgba(255,255,255,.18);border-radius:20px;padding:3px 12px;font-size:13px}
+.g{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}@media(min-width:520px){.g{grid-template-columns:repeat(4,1fr)}}
+.tile{background:var(--soft);border-radius:12px;padding:10px 8px;text-align:center}.tile b{display:block;font-size:21px;line-height:1.2}.tile span{color:var(--mut);font-size:12px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right}th:first-child,td:first-child{text-align:left}th{font-size:12px;color:var(--mut);font-weight:600}
+tr.sun td{background:rgba(240,138,36,.1)}.up{color:var(--grn)}.dn{color:var(--red)}.tw{max-height:380px;overflow-y:auto}
+.lg{margin:0 0 12px}.lg .r{display:flex;justify-content:space-between;font-size:14px}.lg .r span{color:var(--mut);font-size:12.5px}
+.bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:4px 0}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:6px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.tips{display:grid;gap:10px}.tip{display:flex;gap:10px;background:var(--soft);border-radius:12px;padding:11px}.tip .e{font-size:22px;line-height:1.2}.tip b{display:block}.tip span{font-size:13.5px}
+.chart svg{width:100%;height:auto;display:block}.tt{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);padding:6px 10px;border-radius:9px;font-size:12.5px;display:none;white-space:nowrap;z-index:4}
+.leg{display:flex;gap:14px;font-size:12.5px;color:var(--mut);margin-top:4px}.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+.empty{text-align:center;color:var(--mut);padding:30px 10px}.empty .e{font-size:44px}
+.recent{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}.recent button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:20px;padding:6px 14px;font:inherit;cursor:pointer}
+.chip{display:inline-block;padding:1px 9px;border-radius:12px;font-size:12px;font-weight:600;background:var(--soft);color:var(--blue)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}.card{animation:rise .4s cubic-bezier(.2,.8,.2,1) both}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+footer{text-align:center;color:var(--mut);font-size:12.5px;padding:6px 16px 28px}footer a{color:var(--blue)}
+</style></head><body>
+<header><h1>📞 My Call Count</h1><p>Type your referral code to see your calls, day by day</p></header>
+<main>
+<div class="sbox"><span class="mg">🔍</span><input id="q" type="search" placeholder="Type your code, e.g. CRNI" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go"><div class="sug" id="sug"></div></div>
+<div id="out"></div>
+</main>
+<footer id="ft"></footer>
+<script>
+const D=/*DATA*/null;
+const f=x=>Math.round(x).toLocaleString('en-IN'),avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:0,sum=a=>a.reduce((s,x)=>s+x,0);
+const WD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],isSun=n=>new Date(2026,10,n).getDay()==0;
+const HIN=['Hindi','Bhojpuri','Haryanvi'],N=D.days.length;
+const $=id=>document.getElementById(id),q=$('q'),sug=$('sug'),out=$('out');
+const names=Object.keys(D.codes);
+const hrl=h=>(h%12||12)+(h<12?' am':' pm');
+function store(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
+/* ----- autocomplete ----- */
+let hi=-1,list=[];
+function suggest(){const v=q.value.toUpperCase().replace(/\s+/g,'');if(!v){sug.style.display='none';return}
+ list=names.filter(c=>c.startsWith(v)).concat(names.filter(c=>!c.startsWith(v)&&c.includes(v))).slice(0,8);hi=-1;
+ sug.innerHTML=list.length?list.map((c,i)=>`<button data-c="${c}"><b>${c}</b><small>${D.codes[c].n} calls${D.codes[c].t?' · '+D.codes[c].t:''}</small></button>`).join(''):'<button disabled><small>No code found. Check the spelling.</small></button>';sug.style.display='block'}
+q.addEventListener('input',suggest);q.addEventListener('focus',suggest);
+q.addEventListener('keydown',e=>{const b=[...sug.querySelectorAll('button[data-c]')];
+ if(e.key=='ArrowDown'||e.key=='ArrowUp'){e.preventDefault();hi=(hi+(e.key=='ArrowDown'?1:-1)+b.length)%Math.max(b.length,1);b.forEach((x,i)=>x.classList.toggle('hi',i==hi))}
+ else if(e.key=='Enter'){const v=q.value.toUpperCase().replace(/\s+/g,'');pick(hi>=0?list[hi]:D.codes[v]?v:list[0])}else if(e.key=='Escape')sug.style.display='none'});
+sug.addEventListener('mousedown',e=>{const b=e.target.closest('button[data-c]');if(b){e.preventDefault();pick(b.dataset.c)}});
+document.addEventListener('click',e=>{if(!e.target.closest('.sbox'))sug.style.display='none'});
+function pick(c){if(!c||!D.codes[c])return;q.value=c;sug.style.display='none';q.blur();if(location.hash.slice(1)!=c)history.replaceState(null,'','#'+c);
+ const r=(store('recent')||'').split(',').filter(x=>x&&x!=c&&D.codes[x]);store('recent',[c,...r].slice(0,4).join(','));show(c);scrollTo({top:0,behavior:'smooth'})}
+/* ----- chart (stacked bars: Hindi + other languages) ----- */
+function chart(host,hin,oth){const W=420,H=190,m={l:30,r:6,t:10,b:24},iw=W-m.l-m.r,ih=H-m.t-m.b,bw=iw/N;
+ let mx=Math.max(...hin.map((h,i)=>h+oth[i]),1);const st=Math.max(1,Math.ceil(mx/4));mx=st*4;const Y=v=>m.t+ih-v/mx*ih;
+ let s=`<svg viewBox="0 0 ${W} ${H}">`;for(let k=0;k<=4;k++){const y=Y(st*k);s+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${m.l-5}" y="${y+4}" font-size="10.5" text-anchor="end" fill="var(--mut)">${st*k}</text>`}
+ hin.forEach((h,i)=>{const x=m.l+i*bw+bw*.12,w=bw*.76,hh=h/mx*ih,oo=oth[i]/mx*ih;
+  s+=`<rect x="${x}" y="${Y(h)}" width="${w}" height="${hh}" rx="2" fill="var(--blue)"/><rect x="${x}" y="${Y(h)-oo}" width="${w}" height="${oo}" rx="2" fill="var(--org)"/>`;
+  if(N<=16||i%2==0)s+=`<text x="${x+w/2}" y="${H-8}" font-size="10.5" text-anchor="middle" fill="var(--mut)">${D.dnum[i]}</text>`});
+ s+=`<rect class="hv" y="${m.t}" width="${bw}" height="${ih}" fill="var(--blue)" opacity="0"/></svg>`;
+ host.style.position='relative';host.innerHTML=s+'<div class="tt"></div><div class="leg"><span><i style="background:var(--blue)"></i>Hindi</span><span><i style="background:var(--org)"></i>Other languages</span></div>';
+ const svg=host.querySelector('svg'),tt=host.querySelector('.tt'),hv=svg.querySelector('.hv');
+ const mv=e=>{const r=svg.getBoundingClientRect(),i=Math.floor(((e.clientX-r.left)*W/r.width-m.l)/bw);if(i<0||i>=N){tt.style.display='none';hv.setAttribute('opacity',0);return}
+  hv.setAttribute('x',m.l+i*bw);hv.setAttribute('opacity',.1);tt.innerHTML=`<b>${D.days[i]}</b><br>${hin[i]+oth[i]} calls · Hindi ${hin[i]}`;tt.style.display='block';
+  const hr=host.getBoundingClientRect();tt.style.left=Math.min(Math.max(e.clientX-hr.left-40,0),hr.width-130)+'px';tt.style.top='0px'};
+ svg.addEventListener('pointermove',mv);svg.addEventListener('pointerdown',mv);svg.addEventListener('pointerleave',()=>{tt.style.display='none';hv.setAttribute('opacity',0)})}
+/* ----- tips ----- */
+function tips(c,x,a,h,langs){const T=[],tot=sum(a),y=a[N-1],b7=avg(a.slice(-7)),best=Math.max(...a),bi=a.indexOf(best),hs=sum(h)/Math.max(tot,1);
+ const goal=Math.max(Math.ceil(b7*1.2),y+1,3);
+ let streak=0;for(let i=N-1;i>=0&&a[i]>0;i--)streak++;let idle=0;for(let i=N-1;i>=0&&a[i]==0;i--)idle++;
+ if(idle>=2)T.push(['⏰','Start again today',`No calls for ${idle} days. Even 5 calls today restarts your streak. Your best day was ${best} calls on ${D.days[bi]}.`]);
+ else if(y<b7*.7&&b7>0)T.push(['📉','Yesterday was below your usual',`You made ${y} calls yesterday against a usual ${f(b7)}. Try to make up the gap today: aim for ${goal}.`]);
+ else if(y>=best&&best>0)T.push(['🏆','Yesterday was your best day!',`${y} calls, your highest so far. Hold this level for a week and your total grows fast.`]);
+ else T.push(['🎯',`Today's target: ${goal} calls`,`Your last-7-day average is ${f(b7)} and your best day is ${best}. A little above your average each day adds up fast.`]);
+ if(streak>=3)T.push(['🔥',`${streak}-day streak`,`You have called every day for ${streak} days in a row. Do not break it.`]);
+ const wd=a.map((v,i)=>[v,i]).filter(([v,i])=>isSun(D.dnum[i]));if(wd.length&&sum(wd.map(x=>x[0]))<avg(a)*wd.length*.7&&tot>20)T.push(['📅','Sundays are slow for you','Your Sunday calls are much lower than other days. Plan a few extra calls on Sunday to keep your daily average up.']);
+ const hr=c.hr,ht=sum(hr);if(ht>=15){const bh=hr.indexOf(Math.max(...hr)),mor=sum(hr.slice(7,12)),eve=sum(hr.slice(15,22));
+  T.push(['🕒',`Your best time is ${hrl(bh)}–${hrl(bh+1)}`,`${Math.round(hr[bh]/ht*100)}% of your calls happen in that hour.`+(mor/ht<.15?' Very few calls happen before noon. Calling people in the morning (7 to 11 am) adds easy extra calls.':eve/ht<.25?' Evenings (3 to 10 pm) are when most people are free: try to call more in that window.':'')])}
+ if(tot>=20&&hs<.8){const ol=langs.filter(l=>!HIN.includes(l[0])).sort((p,q)=>q[1]-p[1])[0];T.push(['🗣️','Push Hindi calls',`Only ${Math.round(hs*100)}% of your calls are in Hindi. Hindi calls are the focus right now.`+(ol?` Your ${ol[0]} calls are strong (${f(ol[1])}); ask your Hindi-speaking contacts too.`:'')])}
+ if(c.nq>0&&c.nq/c.n>.03)T.push(['✅','Make sure calls are recorded',`${c.nq} of your ${f(c.n)} calls (${Math.round(c.nq/c.n*100)}%) did not qualify because the recording was missing. Keep the call going for the full conversation and check the recording is on.`]);
+ else if(c.n>=20)T.push(['✅','Great recording quality',`${Math.round((1-c.nq/c.n)*100)}% of your calls qualified. Keep it up.`]);
+ const nx=Object.values(D.codes).filter(o=>o.n>c.n).sort((p,q)=>p.n-q.n)[0];
+ if(nx&&c.r>1)T.push(['📈',`Move up from #${c.r}`,`Only ${f(nx.n-c.n)} more calls to overtake the next code. At ${f(Math.max(b7,1))} a day that is ${Math.ceil((nx.n-c.n)/Math.max(b7,1))===1?'about 1 day':Math.ceil((nx.n-c.n)/Math.max(b7,1))+' days'}.`]);
+ if(tot<10)T.push(['🌱','Getting started','Share your referral code with more people and ask each of them to make a call. Every call adds to your count.']);
+ return T}
+/* ----- page ----- */
+function show(code){const c=D.codes[code],a=c.a,h=c.h,tot=sum(a),y=a[N-1],b7=avg(a.slice(-7)),best=Math.max(...a),bi=a.indexOf(best),oth=a.map((v,i)=>v-h[i]);
+ const langs=Object.entries(c.l).map(([l,v])=>[l,sum(v),v[N-1],sum(v.slice(-3))]).sort((p,q)=>q[1]-p[1]);const mxl=Math.max(...langs.map(l=>l[1]),1);
+ const act=a.filter(v=>v>0).length,qual=c.n?Math.round((1-c.nq/c.n)*100):0,P=c.n>=1;
+ let H=`<div class="card hero"><div class="code">${code}${c.t?' · '+c.t:''}</div><div class="big" id="bg">${f(tot)}</div><small>total calls till ${D.days[N-1]}</small><br><span class="rk">🏅 Rank ${c.r} of ${D.n} codes</span></div>
+ <div class="card"><div class="g"><div class="tile"><b>${y}</b><span>Yesterday</span></div><div class="tile"><b>${f(b7)}</b><span>Daily avg (7 days)</span></div><div class="tile"><b>${best}</b><span>Best day · ${D.dnum[bi]} Nov</span></div><div class="tile"><b>${f(sum(h))}</b><span>Hindi calls</span></div></div>
+ <p class="sub" style="margin:10px 0 0">Active on ${act} of ${N} days · ${qual}% of calls qualified</p></div>
+ <div class="card"><h2>💡 Tips to improve your count</h2><p class="sub">Based on your own calls</p><div class="tips">${tips(c,c,a,h,langs).map(t=>`<div class="tip"><div class="e">${t[0]}</div><div><b>${t[1]}</b><span>${t[2]}</span></div></div>`).join('')}</div></div>
+ <div class="card"><h2>📊 Calls per day</h2><p class="sub">Tap a bar to see the numbers</p><div id="ch" class="chart"></div></div>
+ <div class="card"><h2>🗣️ Language-wise count</h2><p class="sub">${langs.length>1?'Calls by language':'All your calls are in one language'}</p>${langs.map(l=>`<div class="lg"><div class="r"><b>${l[0]}</b><b>${f(l[1])}</b></div><div class="bar"><i style="width:0" data-w="${l[1]/mxl*100}"></i></div><div class="r"><span>${Math.round(l[1]/Math.max(tot,1)*100)}% of calls</span><span>Yesterday ${l[2]} · last 3 days ${l[3]}</span></div></div>`).join('')}</div>
+ <div class="card"><h2>🗓️ Day-wise count</h2><p class="sub">Newest first. Orange rows are Sundays.</p><div class="tw"><table><tr><th>Date</th><th>Total</th><th>Hindi</th><th>Other</th><th></th></tr>${a.map((v,i)=>i).reverse().map(i=>{const v=a[i],p=i?a[i-1]:null,d=p==null?'':v>p?`<span class="up">▲ ${v-p}</span>`:v<p?`<span class="dn">▼ ${p-v}</span>`:'–';return `<tr class="${isSun(D.dnum[i])?'sun':''}"><td>${WD[new Date(2026,10,D.dnum[i]).getDay()]} ${D.dnum[i]} Nov</td><td><b>${v}</b></td><td>${h[i]}</td><td>${oth[i]}</td><td>${d}</td></tr>`}).join('')}<tr><td><b>Total</b></td><td><b>${f(tot)}</b></td><td><b>${f(sum(h))}</b></td><td><b>${f(sum(oth))}</b></td><td></td></tr></table></div></div>`;
+ out.innerHTML=H;chart($('ch'),h,oth);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>out.querySelectorAll('.bar i').forEach(i=>i.style.width=i.dataset.w+'%')));
+ const bg=$('bg');if(!matchMedia('(prefers-reduced-motion:reduce)').matches){const t0=performance.now(),st=n=>{const k=Math.min((n-t0)/900,1);bg.textContent=f(tot*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(st)};requestAnimationFrame(st)}}
+function home(){const r=(store('recent')||'').split(',').filter(x=>x&&D.codes[x]);
+ out.innerHTML=`<div class="empty"><div class="e">👆</div><p>Start typing your referral code above, then tap it in the list.</p>${r.length?`<p style="font-size:13px">Recently viewed</p><div class="recent">${r.map(c=>`<button data-c="${c}">${c}</button>`).join('')}</div>`:''}</div>`;
+ out.querySelectorAll('.recent button').forEach(b=>b.onclick=()=>pick(b.dataset.c))}
+$('ft').innerHTML=`Counts are updated every morning with the previous day's calls · data up to ${D.upto}<br><a href="dashboard.html">Team lead dashboard →</a>`;
+addEventListener('hashchange',()=>{const c=decodeURIComponent(location.hash.slice(1)).toUpperCase();D.codes[c]?(q.value=c,show(c)):home()});
+const c0=decodeURIComponent(location.hash.slice(1)).toUpperCase();D.codes[c0]?(q.value=c0,show(c0)):home();
+</script><script data-goatcounter="https://hindicallscounter.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body></html>

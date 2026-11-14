@@ -1,6 +1,6 @@
 """Daily update: python3 update.py
 Reads every .xlsx in data/ (sheet 'Calls', de-duplicated on Call ID), recomputes the plan,
-and writes index.html (codes only: no referrer names, no phone numbers)."""
+and writes index.html (field-team page, from field.html) and dashboard.html (team dashboard, from tpl.html). Codes only: no referrer names, no phone numbers."""
 import pandas as pd, numpy as np, json, glob, os, sys
 TARGETS={'CR':240000,'WB':51500,'OD':11500}; TH=240000; MILE=100000; MILE_DAY=15; PEAK_DAY=20; E=0.004
 TNAME={'CR':'Craftzens','WB':'mDigital-ParisevaOne','OD':'mDigital-OD'}
@@ -108,6 +108,23 @@ tm=a.groupby('code').team.first(); al=a.groupby('code').size()
 out['codes']=[[k,tm[k],int(c.loc[k].sum()),int(al[k]),c.loc[k].tolist()] for k in c.sum(axis=1).sort_values(ascending=False).index]
 out['regTeam']={l:d[d.Language==l].groupby('team').size().to_dict() for l in REG}
 tpl=open('tpl.html').read()
-open('index.html','w').write(tpl.replace('/*DATA*/null',json.dumps(out,default=float)))
+open('dashboard.html','w').write(tpl.replace('/*DATA*/null',json.dumps(out,default=float)))
+# ---- field-team page (index.html): one record per referral code, no names / phone numbers ----
+v=d[d.code.str.fullmatch(r'[A-Z0-9]{2,10}')]
+TN={'CR':'Craftzens','WB':'ParisevaOne','OD':'mDigital-OD','UN':''}
+g=v.groupby('code'); allc=g.size().sort_values(ascending=False); rank={k:i+1 for i,k in enumerate(allc.index)}
+dayall=v.groupby(['code','date']).size().unstack(fill_value=0).reindex(columns=days,fill_value=0)
+dayhin=v[v.hin].groupby(['code','date']).size().unstack(fill_value=0).reindex(index=allc.index,columns=days,fill_value=0)
+hr=v.groupby(['code','hour']).size().unstack(fill_value=0).reindex(columns=range(24),fill_value=0)
+nq=v[v.Status!='Qualified'].groupby('code').size()
+lg=v.groupby(['code','Language','date']).size().unstack(fill_value=0).reindex(columns=days,fill_value=0)
+tmap=v.groupby('code').team.first()
+F={}
+for k in allc.index:
+    L=lg.loc[k]; F[k]=dict(t=TN[tmap[k]],r=rank[k],n=int(allc[k]),nq=int(nq.get(k,0)),a=dayall.loc[k].tolist(),h=dayhin.loc[k].tolist(),hr=hr.loc[k].tolist(),
+        l={l:L.loc[l].tolist() for l in L.index.get_level_values(0) if L.loc[l].sum()>0})
+fo={'days':lab,'dnum':[x.day for x in days],'n':len(allc),'upto':lab[-1],'tot':int(len(v)),
+    'q':[int(allc.iloc[min(int(len(allc)*p),len(allc)-1)]) for p in (0,.1,.25,.5)],'codes':F}
+open('index.html','w').write(open('field.html').read().replace('/*DATA*/null',json.dumps(fo,default=float,separators=(',',':'))))
 for T,r in out['teams'].items(): print(T,r['hindi'],'goal today',round(r['goal'][0]),'peak',round(r['peak']),'yest',int(r['yest']),'cum15',round(r['cum'][15-first]) if first<=15 else '-','cross',r['mile']['cross'])
 c=out['co']; print('CO',c['hindi'],'goal today',round(c['goal'][0]),'peak',round(c['peak']),'cross',c['mile']['cross'])
