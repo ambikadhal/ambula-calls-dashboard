@@ -105,8 +105,8 @@ for T in TARGETS:
     out['teams'][T]=r
 # code-wise rows (codes only)
 a=d[d.team!='UN']; c=a[a.hin].groupby(['code','date']).size().unstack(fill_value=0).reindex(columns=days,fill_value=0)
-tm=a.groupby('code').team.first(); al=a.groupby('code').size()
-out['codes']=[[k,tm[k],int(c.loc[k].sum()),int(al[k]),c.loc[k].tolist()] for k in c.sum(axis=1).sort_values(ascending=False).index]
+tm=a.groupby('code').team.first(); al=a.groupby('code').size(); ay=a[a.date==days[-1]].groupby('code').size()
+out['codes']=[[k,tm[k],int(c.loc[k].sum()),int(al[k]),c.loc[k].tolist(),int(ay.get(k,0))] for k in c.sum(axis=1).sort_values(ascending=False).index]
 out['regTeam']={l:d[d.Language==l].groupby('team').size().to_dict() for l in REG}
 tpl=open('tpl.html').read()
 open('dashboard.html','w').write(tpl.replace('/*DATA*/null',json.dumps(out,default=float)))
