@@ -2,7 +2,8 @@
 Reads every .xlsx in data/ (sheet 'Calls', de-duplicated on Call ID), recomputes the plan,
 and writes index.html (field-team page, from field.html) and dashboard.html (team dashboard, from tpl.html). Codes only: no referrer names, no phone numbers."""
 import pandas as pd, numpy as np, json, glob, os, sys
-TARGETS={'CR':240000,'WB':51500,'OD':11500}; TH=150000; TEAM_BASE=240000; MILE=100000; MILE_DAY=15; PEAK_DAY=20; E=0.004  # TH = company Hindi target; team milestones scale off TEAM_BASE
+TARGETS={'CR':118800,'WB':25500,'OD':5700}  # scaled from 240000/51500/11500 so the three sum to TH
+TH=150000; TEAM_BASE=240000; MILE=100000; MILE_DAY=15; PEAK_DAY=20; E=0.004  # TH = company Hindi target (MILE/TEAM_BASE only used if MILESTONE=True)
 TNAME={'CR':'Craftzens','WB':'mDigital-ParisevaOne','OD':'mDigital-OD'}
 TOPN={'CR':25,'WB':15,'OD':10}
 SCOPE={'CR':['Telugu','Kannada','Marathi','Tamil','Punjabi','Gujarati','Malayalam'],'WB':['Bangla'],'OD':['Telugu']}
