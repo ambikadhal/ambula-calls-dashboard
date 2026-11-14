@@ -2,7 +2,7 @@
 Reads every .xlsx in data/ (sheet 'Calls', de-duplicated on Call ID), recomputes the plan,
 and writes index.html (field-team page, from field.html) and dashboard.html (team dashboard, from tpl.html). Codes only: no referrer names, no phone numbers."""
 import pandas as pd, numpy as np, json, glob, os, sys
-TARGETS={'CR':240000,'WB':51500,'OD':11500}; TH=240000; MILE=100000; MILE_DAY=15; PEAK_DAY=20; E=0.004
+TARGETS={'CR':240000,'WB':51500,'OD':11500}; TH=150000; TEAM_BASE=240000; MILE=100000; MILE_DAY=15; PEAK_DAY=20; E=0.004  # TH = company Hindi target; team milestones scale off TEAM_BASE
 TNAME={'CR':'Craftzens','WB':'mDigital-ParisevaOne','OD':'mDigital-OD'}
 TOPN={'CR':25,'WB':15,'OD':10}
 SCOPE={'CR':['Telugu','Kannada','Marathi','Tamil','Punjabi','Gujarati','Malayalam'],'WB':['Bangla'],'OD':['Telugu']}
@@ -48,12 +48,11 @@ def plan(s0,rem,gap=0):
     if P<s0: g=[rem/len(ds)]*len(ds); P=rem/len(ds)    # already ahead of schedule: hold flat
     else: g=[a+b*P for a,b in zip(c0,cp)]
     return g,P
-def series(hd,done,target):
+def series(hd,done,target,M=None):
     b7=float(hd[-7:].mean()); y=float(hd[-1]); s0=max(max(y,b7)*F,float(np.ceil(hd.max()*1.05))); rem=target-done
-    M=target*MILE/TH; g,P=plan(s0,rem,M-done); cum=(done+np.cumsum(g)).tolist()
+    M=target*MILE/TEAM_BASE if M is None else M; g,P=plan(s0,rem,M-done); cum=(done+np.cumsum(g)).tolist()
     x=np.arange(1,ND); sl,ic=np.polyfit(x,hd[1:],1)
     fit=np.maximum(ic+sl*np.arange(ND,30),0)
-    M=target*MILE/TH
     cross=next((first+i for i,v in enumerate(cum) if v>=M),None)
     pace=None
     if b7>0:
@@ -70,7 +69,7 @@ print('start factor',round(F,3))
 hs=d[d.hin]; hsum=int(hs.groupby('date').size().reindex(days,fill_value=0).sum())
 chd=hs.groupby('date').size().reindex(days,fill_value=0).values
 out={'days':lab,'dnum':[x.day for x in days],'LAST':LAST,'REM':REM,'milestone':MILE,'F':F,'mileDay':MILE_DAY,'peakDay':(MILE_DAY if (STRICT and LAST<MILE_DAY) else PEAK_DAY),'strict':bool(STRICT and LAST<MILE_DAY),
- 'co':series(chd,hsum,TH)}
+ 'co':series(chd,hsum,TH,MILE)}
 out['co'].update(calls=len(d),odia=int((d.Language=='Odia').sum()),eng=int((d.Language=='English').sum()),
  reg={l:int((d.Language==l).sum()) for l in REG},unassigned=int(hs[hs.team=='UN'].shape[0]))
 out['teams']={}
